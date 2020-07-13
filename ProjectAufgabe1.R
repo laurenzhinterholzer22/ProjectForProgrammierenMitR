@@ -64,3 +64,4 @@ for (i in seq_len(length(msoaPopulation))) {
 for (i in seq_len(length(oswardPopulation))) {
   print((max(oswardPopulation)-oswardPopulation[i])/max(oswardPopulation))
 }
+#test 
