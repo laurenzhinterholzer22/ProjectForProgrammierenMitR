@@ -33,34 +33,34 @@ sum(oswardPopulation)
 
 
 for (i in seq_len(length(boroughArea))) {
-  print((max(boroughArea)-boroughArea[i])/max(boroughArea))
+  print((max(boroughArea)-boroughArea[i])/max(boroughArea)*100)
 }
 
 for (i in seq_len(length(lsoaArea))) {
-  print((max(lsoaArea)-lsoaArea[i])/max(lsoaArea))
+  print((max(lsoaArea)-lsoaArea[i])/max(lsoaArea)*100)
 }
 
 for (i in seq_len(length(msoaArea))) {
-  print((max(msoaArea)-msoaArea[i])/max(msoaArea))
+  print((max(msoaArea)-msoaArea[i])/max(msoaArea)*100)
 }
 
 for (i in seq_len(length(oswardArea))) {
-  print((max(oswardArea)-oswardArea[i])/max(oswardArea))
+  print((max(oswardArea)-oswardArea[i])/max(oswardArea)*100)
 }
 
 
 for (i in seq_len(length(boroughPopulation))) {
-  print((max(boroughPopulation)-boroughPopulation[i])/max(boroughPopulation))
+  print((max(boroughPopulation)-boroughPopulation[i])/max(boroughPopulation)*100)
 }
 
 for (i in seq_len(length(lsoaPopulation))) {
-  print((max(lsoaPopulation)-lsoaPopulation[i])/max(lsoaPopulation))
+  print((max(lsoaPopulation)-lsoaPopulation[i])/max(lsoaPopulation)*100)
 }
 
 for (i in seq_len(length(msoaPopulation))) {
-  print((max(msoaPopulation)-msoaPopulation[i])/max(msoaPopulation))
+  print((max(msoaPopulation)-msoaPopulation[i])/max(msoaPopulation)*100)
 }
 
 for (i in seq_len(length(oswardPopulation))) {
-  print((max(oswardPopulation)-oswardPopulation[i])/max(oswardPopulation))
+  print((max(oswardPopulation)-oswardPopulation[i])/max(oswardPopulation)*100)
 }
