@@ -103,3 +103,63 @@ tab1Dataframe <- data.frame(
   stringsAsFactors = FALSE
 )
 tab1Dataframe
+
+##Visualisierung
+
+
+#2
+
+install.packages("sf")
+library(sf)
+boundariesLondon <- st_read("LSOA_2011_London_gen_MHW.shp")
+summary(boundariesLondon)
+
+
+#3
+
+
+
+
+
+#4
+energyFat <- yearMsoa$energy_fat
+energyFibre <- yearMsoa$energy_fibre
+energyAlc <- yearMsoa$energy_alcohol
+energyCarb <- yearMsoa$energy_carb
+energySugar <- yearMsoa$energy_sugar
+energyProtein <- yearMsoa$energy_protein
+energyTot <- yearMsoa$energy_tot
+energyFatTot <-c(1:length(energyFat))
+energyFibreTot <-c(1:length(energyFat))
+energyAlcTot <-c(1:length(energyFat))
+energyCarbTot <-c(1:length(energyFat))
+energySugarTot <-c(1:length(energyFat))
+energyProteinTot <-c(1:length(energyFat))
+
+
+
+for(i in seq_along(length(energyTot))) {
+  energyFatTot <- (energyTot - energyFat) / energyTot
+}
+
+for(i in seq_along(length(energyTot))) {
+  energyFibreTot <- (energyTot - energyFibre) / energyTot
+}
+
+for(i in seq_along(length(energyTot))) {
+  energyAlcTot <- (energyTot - energyAlc) / energyTot
+}
+
+for(i in seq_along(length(energyTot))) {
+  energyCarbTot <- (energyTot - energyCarb) / energyTot
+}
+
+for(i in seq_along(length(energyTot))) {
+  energySugarTot <- (energyTot - energySugar) / energyTot
+}
+
+for(i in seq_along(length(energyTot))) {
+  energyProteinTot <- (energyTot - energyProtein) / energyTot
+}
+
+
