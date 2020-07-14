@@ -104,6 +104,7 @@ tab1Dataframe <- data.frame(
 )
 tab1Dataframe
 
+<<<<<<< HEAD
 ##Visualisierung
 
 
@@ -162,4 +163,12 @@ for(i in seq_along(length(energyTot))) {
   energyProteinTot <- (energyTot - energyProtein) / energyTot
 }
 
-
+hist(energySugarTot, main = "test",xlab = "relativer Anteil an Zucker")
+hist(energySugarTot,main = "relativer Anteil an Zucker", xlab = "Zucker")
+hist(energySugarTot,main = "relativer Anteil an Zucker", xlab = "Zucker", ylab = "Haeufigkeit")
+hist(energySugarTot,main = "relativer Anteil an Zucker", xlab = "Zucker", ylab = "Haeufigkeit")
+hist(energyFatTot,main = "relativer Anteil an Fett", xlab = "Fett", ylab = "Haeufigkeit")
+hist(energyFibreTot,main = "relativer Anteil an Balaststoffe", xlab = "Balaststoffe", ylab = "Haeufigkeit")
+hist(energyAlcTot,main = "relativer Anteil an Alkohol", xlab = "Alkohol", ylab = "Haeufigkeit")
+hist(energyCarbTot,main = "relativer Anteil an Kohlenhydraten", xlab = "Kohlenhydraten", ylab = "Haeufigkeit")
+hist(energyProteinTot,main = "relativer Anteil an Eiweiss", xlab = "Eiweiss", ylab = "Haeufigkeit")
