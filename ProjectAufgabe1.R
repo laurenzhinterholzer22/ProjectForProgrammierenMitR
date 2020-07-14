@@ -104,8 +104,47 @@ tab1Dataframe <- data.frame(
 )
 tab1Dataframe
 
-<<<<<<< HEAD
-##Visualisierung
+
+### Dataframe ###
+
+numberOfAreasBorough <- length(boroughArea)
+numberOfAreasLsoa <- length(lsoaArea)
+numberOfAreasMsoa <- length(msoaArea)
+numberOfAreasOsward <- length(oswardArea)
+
+avgSurvaceBorough <- sum(yearBorough$area_sq_km) / numberOfAreasBorough
+avgSurvaceLsoa <- sum(yearLsoa$area_sq_km) / numberOfAreasLsoa
+avgSurvaceMsoa <- sum(yearMsoa$area_sq_km) / numberOfAreasMsoa
+avgSurvaceOsward <- sum(yearOsward$area_sq_km) / numberOfAreasOsward
+
+avgPopulationBorough <- sum(boroughPopulation) / numberOfAreasBorough
+avgPopulationLsoa <- sum(lsoaPopulation) / numberOfAreasLsoa
+avgPopulationMsoa <- sum(msoaPopulation) / numberOfAreasMsoa
+avgPopulationOsward <- sum(oswardPopulation) / numberOfAreasOsward
+
+medianPopLsoa <- median(yearLsoa$population)
+medianPopMsoa <- median(yearMsoa$population)
+medianPopOsward <- median(yearOsward$population)
+medianPopBorough <- median(yearBorough$population)
+
+medianAreaLsoa <- median(yearLsoa$area_sq_km)
+medianAreaMsoa <- median(yearMsoa$area_sq_km)
+medianAreaOsward <- median(yearOsward$area_sq_km)
+medianAreaBorough <- median(yearBorough$area_sq_km)
+
+
+tab1Dataframe <- data.frame(
+  Area = c("LSOA","MSOA","Ward","Borough"),
+  NumberOfAreas = c(numberOfAreasLsoa,numberOfAreasMsoa,numberOfAreasOsward,numberOfAreasBorough),
+  AvgSurfaces = c(avgSurvaceLsoa,avgSurvaceMsoa,avgSurvaceOsward,avgSurvaceBorough),
+  AvgPopulation = c(avgPopulationLsoa,avgPopulationMsoa,avgPopulationOsward,avgPopulationOsward),
+  MedianPopulation = c(medianPopLsoa,medianPopMsoa,medianPopOsward,meadianPopBorough),
+  MedianArea = c(medianAreaLsoa,medianAreaMsoa,medianAreaOsward,medianAreaBorough),
+  stringsAsFactors = FALSE
+)
+tab1Dataframe
+
+
 
 
 #2
@@ -172,3 +211,5 @@ hist(energyFibreTot,main = "relativer Anteil an Balaststoffe", xlab = "Balaststo
 hist(energyAlcTot,main = "relativer Anteil an Alkohol", xlab = "Alkohol", ylab = "Haeufigkeit")
 hist(energyCarbTot,main = "relativer Anteil an Kohlenhydraten", xlab = "Kohlenhydraten", ylab = "Haeufigkeit")
 hist(energyProteinTot,main = "relativer Anteil an Eiweiss", xlab = "Eiweiss", ylab = "Haeufigkeit")
+
+
