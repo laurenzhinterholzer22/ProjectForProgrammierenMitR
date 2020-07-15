@@ -169,51 +169,55 @@ legend("topright", c("lsoa", "msoa", "ward"), lty = c(NA,1,2), pch = c(1,NA,NA))
 
 
 #4
+
 energyFat <- yearMsoa$energy_fat
 energyFibre <- yearMsoa$energy_fibre
-energyAlc <- yearMsoa$energy_alcohol
+energySat <- yearMsoa$energy_saturate
 energyCarb <- yearMsoa$energy_carb
 energySugar <- yearMsoa$energy_sugar
 energyProtein <- yearMsoa$energy_protein
+
 energyTot <- yearMsoa$energy_tot
-energyFatTot <-c(1:length(energyFat))
-energyFibreTot <-c(1:length(energyFat))
-energyAlcTot <-c(1:length(energyFat))
-energyCarbTot <-c(1:length(energyFat))
-energySugarTot <-c(1:length(energyFat))
-energyProteinTot <-c(1:length(energyFat))
 
+energyProteinTot <- energySugarTot <- energyCarbTot <- energySatTot <- energyFibreTot <-  energyFatTot <- numeric(length(nrow(yearMsoa)))
 
 
 for(i in seq_along(length(energyTot))) {
-  energyFatTot <- (energyTot - energyFat) / energyTot
+  #energyFatTot <- (energyTot - energyFat) / energyTot
+  energyFatTot <- energyFat / energyTot
 }
 
 for(i in seq_along(length(energyTot))) {
-  energyFibreTot <- (energyTot - energyFibre) / energyTot
+  #energyFibreTot <- (energyTot - energyFibre) / energyTot
+  energyFibreTot <- energyFibre / energyTot
 }
 
 for(i in seq_along(length(energyTot))) {
-  energyAlcTot <- (energyTot - energyAlc) / energyTot
+  #energySatTot <- (energyTot - energySat) / energyTot
+  energySatTot <- energySat / energyTot
 }
 
 for(i in seq_along(length(energyTot))) {
-  energyCarbTot <- (energyTot - energyCarb) / energyTot
+  #energyCarbTot <- (energyTot - energyCarb) / energyTot
+  energyCarbTot <- energyCarb / energyTot
 }
 
 for(i in seq_along(length(energyTot))) {
-  energySugarTot <- (energyTot - energySugar) / energyTot
+  #energySugarTot <- (energyTot - energySugar) / energyTot
+  energySugarTot <- energySugar / energyTot
 }
 
 for(i in seq_along(length(energyTot))) {
-  energyProteinTot <- (energyTot - energyProtein) / energyTot
+  #energyProteinTot <- (energyTot - energyProtein) / energyTot
+  energyProteinTot <- energyProtein / energyTot
 }
 
-hist(energySugarTot,main = "relativer Anteil an Zucker", xlab = "Zucker", ylab = "Haeufigkeit",breaks=seq(0,1,length=20))
-hist(energyFatTot,main = "relativer Anteil an Fett", xlab = "Fett", ylab = "Haeufigkeit",breaks=seq(0,1,length=20))
-hist(energyFibreTot,main = "relativer Anteil an Balaststoffe", xlab = "Balaststoffe", ylab = "Haeufigkeit",breaks=seq(0,1,length=20))
-hist(energyAlcTot,main = "relativer Anteil an Alkohol", xlab = "Alkohol", ylab = "Haeufigkeit",breaks=seq(0,1,length=20))
-hist(energyCarbTot,main = "relativer Anteil an Kohlenhydraten", xlab = "Kohlenhydraten", ylab = "Haeufigkeit",breaks=seq(0,1,length=20))
-hist(energyProteinTot,main = "relativer Anteil an Eiweiss", xlab = "Eiweiss", ylab = "Haeufigkeit",breaks=seq(0,1,length=20))
+par(mfrow=c(2,3))
+hist(energyCarbTot, main = NULL, xlab = "Energie von Kohlenhydraten", ylab = "Haeufigkeit",breaks=seq(0,0.6,length=100), col = "red", ylim = c(0,300))
+hist(energyFatTot,main = NULL, xlab = "Energie von Fetten", ylab = "Haeufigkeit",breaks=seq(0,0.6,length=100), col = "purple", ylim = c(0,300))
+hist(energySatTot, main = NULL, xlab = "Energie von Saturated", ylab = "Haeufigkeit",breaks=seq(0,0.6,length=100), col = "pink", ylim = c(0,300))
+hist(energySugarTot, main = NULL, xlab = "Energie von Zucker", ylab = "Haeufigkeit",breaks=seq(0,0.6,length=100), col = "orange", ylim = c(0,300))
+hist(energyProteinTot, main = NULL, xlab = "Energie von Eiweiß", ylab = "Haeufigkeit",breaks=seq(0,0.6,length=100), col = "green", ylim = c(0,300))
+hist(energyFibreTot,main = NULL, xlab = "Energie von Ballaststoffe", ylab = "Haeufigkeit",breaks=seq(0,0.6,length=100), col = "lightgreen", ylim = c(0,300))
 
 
