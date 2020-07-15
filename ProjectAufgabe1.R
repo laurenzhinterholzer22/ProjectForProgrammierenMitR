@@ -119,9 +119,16 @@ summary(boundariesLondon)
 
 #3
 
-
-
-
+plot(yearLsoa$people_per_sq_km/sum(yearLsoa$population))
+plot(yearLsoa$people_per_sq_km)
+plot(yearLsoa$representativeness_norm)
+yearLsoa$representativeness_norm >0.1
+lsoaRepre <- subset(yearLsoa$representativeness_norm, yearLsoa$representativeness_norm >0.1)
+msoaRepre <- subset(yearLsoa$representativeness_norm, yearMsoa$representativeness_norm > 0.1)
+oswardRepre <- subset(yearOsward$representativeness_norm, yearOsward$representativeness_norm > 0.1)
+plot(density(lsoaRepre), main = "Representativitaet Lsoa", xlab = "Threshold" )
+plot(density(msoaRepre), main = "Representativitaet Msoa", xlab = "Threshold" )
+plot(density(oswardRepre), main = "Representativitaet Osward", xlab = "Threshold" )
 
 #4
 energyFat <- yearMsoa$energy_fat
@@ -164,14 +171,11 @@ for(i in seq_along(length(energyTot))) {
   energyProteinTot <- (energyTot - energyProtein) / energyTot
 }
 
-hist(energySugarTot, main = "test",xlab = "relativer Anteil an Zucker")
-hist(energySugarTot,main = "relativer Anteil an Zucker", xlab = "Zucker")
-hist(energySugarTot,main = "relativer Anteil an Zucker", xlab = "Zucker", ylab = "Haeufigkeit")
-hist(energySugarTot,main = "relativer Anteil an Zucker", xlab = "Zucker", ylab = "Haeufigkeit")
-hist(energyFatTot,main = "relativer Anteil an Fett", xlab = "Fett", ylab = "Haeufigkeit")
-hist(energyFibreTot,main = "relativer Anteil an Balaststoffe", xlab = "Balaststoffe", ylab = "Haeufigkeit")
-hist(energyAlcTot,main = "relativer Anteil an Alkohol", xlab = "Alkohol", ylab = "Haeufigkeit")
-hist(energyCarbTot,main = "relativer Anteil an Kohlenhydraten", xlab = "Kohlenhydraten", ylab = "Haeufigkeit")
-hist(energyProteinTot,main = "relativer Anteil an Eiweiss", xlab = "Eiweiss", ylab = "Haeufigkeit")
+hist(energySugarTot,main = "relativer Anteil an Zucker", xlab = "Zucker", ylab = "Haeufigkeit",breaks=seq(0,1,length=20))
+hist(energyFatTot,main = "relativer Anteil an Fett", xlab = "Fett", ylab = "Haeufigkeit",breaks=seq(0,1,length=20))
+hist(energyFibreTot,main = "relativer Anteil an Balaststoffe", xlab = "Balaststoffe", ylab = "Haeufigkeit",breaks=seq(0,1,length=20))
+hist(energyAlcTot,main = "relativer Anteil an Alkohol", xlab = "Alkohol", ylab = "Haeufigkeit",breaks=seq(0,1,length=20))
+hist(energyCarbTot,main = "relativer Anteil an Kohlenhydraten", xlab = "Kohlenhydraten", ylab = "Haeufigkeit",breaks=seq(0,1,length=20))
+hist(energyProteinTot,main = "relativer Anteil an Eiweiss", xlab = "Eiweiss", ylab = "Haeufigkeit",breaks=seq(0,1,length=20))
 
 
