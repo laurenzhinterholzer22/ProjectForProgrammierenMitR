@@ -104,10 +104,13 @@ tab1Dataframe <- data.frame(
 )
 tab1Dataframe
 
+## Visualisieren
+par(mfrow=c(1,2))
+hist(yearLsoa$population, main = "Lsoa Bevoelkerung",xlab = "Bevoelkerung", ylab = "Haeufigkeit", col =3)
+hist(yearLsoa$area_sq_km, main = "Lsoa Flaeche",xlab = "Flaeche", ylab = "Haeufigkeit", col =4)
 
 
 #2
-
 install.packages("sf")
 library(sf)
 boundariesLondon <- st_read("LSOA_2011_London_gen_MHW.shp")
