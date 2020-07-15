@@ -98,7 +98,7 @@ tab1Dataframe <- data.frame(
   NumberOfAreas = c(numberOfAreasLsoa,numberOfAreasMsoa,numberOfAreasOsward,numberOfAreasBorough),
   AvgSurfaces = c(avgSurvaceLsoa,avgSurvaceMsoa,avgSurvaceOsward,avgSurvaceBorough),
   AvgPopulation = c(avgPopulationLsoa,avgPopulationMsoa,avgPopulationOsward,avgPopulationOsward),
-  MedianPopulation = c(medianPopLsoa,medianPopMsoa,medianPopOsward,meadianPopBorough),
+  MedianPopulation = c(medianPopLsoa,medianPopMsoa,medianPopOsward,medianPopBorough),
   MedianArea = c(medianAreaLsoa,medianAreaMsoa,medianAreaOsward,medianAreaBorough),
   stringsAsFactors = FALSE
 )
@@ -115,6 +115,30 @@ install.packages("sf")
 library(sf)
 boundariesLondon <- st_read("LSOA_2011_London_gen_MHW.shp")
 summary(boundariesLondon)
+class(boundariesLondon)
+dim(boundariesLondon)
+colnames(boundariesLondon)
+
+mergeboundaries <- merge(boundariesLondon, yearLsoa, by.x = "LSOA11CD", by.y = "area_id")
+class(mergeboundaries)
+dim(mergeboundaries)    # zwei Reihen weniger, da diese in "yearLsoa" nicht vorhanden sind (weiß nicht, wie es gehört)
+colnames(mergeboundaries)
+
+install.packages("colorspace")
+library("colorspace")
+
+
+par(mfrow=c(1,2))
+# des mit log geht vllt anders a nu
+# mergeboundaries$logvals <- log(mergeboundaries$num_transactions)
+plot(mergeboundaries["num_transactions"], logz = TRUE, pal = terrain_hcl) #palette muss ma si nu anschauen
+
+mergeboundaries$percivil <- mergeboundaries$num_transactions/mergeboundaries$population
+plot(mergeboundaries["percivil"], logz = TRUE,  pal = terrain_hcl) #palette muss ma si nu anschauen
+
+# fast kein Unterscheid zwischen den beiden
+
+
 
 
 #3
