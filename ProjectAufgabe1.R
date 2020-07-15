@@ -131,28 +131,42 @@ library("colorspace")
 par(mfrow=c(1,2))
 # des mit log geht vllt anders a nu
 # mergeboundaries$logvals <- log(mergeboundaries$num_transactions)
-plot(mergeboundaries["num_transactions"], logz = TRUE, pal = terrain_hcl) #palette muss ma si nu anschauen
+plot(mergeboundaries["num_transactions"], logz = TRUE, main = "Number of Transactions", pal = terrain_hcl) #palette muss ma si nu anschauen
 
-mergeboundaries$percivil <- mergeboundaries$num_transactions/mergeboundaries$population
-plot(mergeboundaries["percivil"], logz = TRUE,  pal = terrain_hcl) #palette muss ma si nu anschauen
+mergeboundaries$perresident <- mergeboundaries$num_transactions/mergeboundaries$population
+plot(mergeboundaries["perresident"], logz = TRUE, main = "Transactions per resident", pal = terrain_hcl) #palette muss ma si nu anschauen
 
 # fast kein Unterscheid zwischen den beiden
 
 
-
-
 #3
+sequ <- seq(0, 1, by = 0.01)
+x <- numeric()
+for(i in sequ){
+  x <- append(x, nrow(yearLsoa[yearLsoa$representativeness_norm > i,])/nrow(yearLsoa))
+}
+lsoathreshold <- data.frame(seq = sequ, perc = x)
 
-plot(yearLsoa$people_per_sq_km/sum(yearLsoa$population))
-plot(yearLsoa$people_per_sq_km)
-plot(yearLsoa$representativeness_norm)
-yearLsoa$representativeness_norm >0.1
-lsoaRepre <- subset(yearLsoa$representativeness_norm, yearLsoa$representativeness_norm >0.1)
-msoaRepre <- subset(yearLsoa$representativeness_norm, yearMsoa$representativeness_norm > 0.1)
-oswardRepre <- subset(yearOsward$representativeness_norm, yearOsward$representativeness_norm > 0.1)
-plot(density(lsoaRepre), main = "Representativitaet Lsoa", xlab = "Threshold" )
-plot(density(msoaRepre), main = "Representativitaet Msoa", xlab = "Threshold" )
-plot(density(oswardRepre), main = "Representativitaet Osward", xlab = "Threshold" )
+x <- numeric()
+for(i in sequ){
+  x <- append(x, nrow(yearMsoa[yearMsoa$representativeness_norm > i,])/nrow(yearMsoa))
+}
+msoathreshold <- data.frame(seq = sequ, perc = x)
+
+x <- numeric()
+for(i in sequ){
+  x <- append(x, nrow(yearOsward[yearOsward$representativeness_norm > i,])/nrow(yearOsward))
+}
+wardthreshold <- data.frame(seq = sequ, perc = x)
+
+
+
+plot(lsoathreshold, main = "Representativitaet", xlab = "Threshold")
+lines(msoathreshold, lty = 1)
+lines(wardthreshold, lty = 2)
+legend("topright", c("lsoa", "msoa", "ward"), lty = c(NA,1,2), pch = c(1,NA,NA))
+
+
 
 #4
 energyFat <- yearMsoa$energy_fat
