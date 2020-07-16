@@ -93,67 +93,37 @@ plot(mergeboundaries["perresident"], logz = TRUE, main = "Transactions per resid
 
 
 #3
+
 sequ <- seq(0, 1, by = 0.01)
-x <- numeric()
-for(i in sequ){
-  x <- append(x, nrow(yearLsoa[yearLsoa$representativeness_norm > i,])/nrow(yearLsoa))
+
+dat <- list(lsoa = yearLsoa, msoa = yearMsoa, ward = yearOsward)
+
+repr <- function(var){
+  x <- numeric()
+  for(i in sequ){
+    x <- append(x, nrow(var[var$representativeness_norm > i,])/nrow(var))
+  }
+  return(list(seq = sequ, perc = x))
 }
-lsoathreshold <- data.frame(seq = sequ, perc = x)
 
-x <- numeric()
-for(i in sequ){
-  x <- append(x, nrow(yearMsoa[yearMsoa$representativeness_norm > i,])/nrow(yearMsoa))
-}
-msoathreshold <- data.frame(seq = sequ, perc = x)
+normRepr <- lapply(dat, repr)
 
-x <- numeric()
-for(i in sequ){
-  x <- append(x, nrow(yearOsward[yearOsward$representativeness_norm > i,])/nrow(yearOsward))
-}
-wardthreshold <- data.frame(seq = sequ, perc = x)
-
-
-
-plot(lsoathreshold, main = "Representativitaet", xlab = "Threshold")
-lines(msoathreshold, lty = 1)
-lines(wardthreshold, lty = 2)
+par(mfrow=c(1,1))
+plot(as.data.frame(normRepr$lsoa), main = "Representativitaet", xlab = "Threshold")
+lines(as.data.frame(normRepr$msoa), lty = 1)
+lines(as.data.frame(normRepr$ward), lty = 2)
 legend("topright", c("lsoa", "msoa", "ward"), lty = c(NA,1,2), pch = c(1,NA,NA))
 
 
 
 #4
 
-energyFat <- yearMsoa$energy_fat
-energyFibre <- yearMsoa$energy_fibre
-energySat <- yearMsoa$energy_saturate
-energyCarb <- yearMsoa$energy_carb
-energySugar <- yearMsoa$energy_sugar
-energyProtein <- yearMsoa$energy_protein
-
-energyTot <- yearMsoa$energy_tot
-
-energyProteinTot <- energySugarTot <- energyCarbTot <- energySatTot <- energyFibreTot <-  energyFatTot <- numeric(length(nrow(yearMsoa)))
-
-
-  #energyFatTot <- (energyTot - energyFat) / energyTot
-energyFatTot <- energyFat / energyTot
-
-  #energyFibreTot <- (energyTot - energyFibre) / energyTot
-energyFibreTot <- energyFibre / energyTot
-
-  #energySatTot <- (energyTot - energySat) / energyTot
-energySatTot <- energySat / energyTot
-
-
-  #energyCarbTot <- (energyTot - energyCarb) / energyTot
-energyCarbTot <- energyCarb / energyTot
-
-  #energySugarTot <- (energyTot - energySugar) / energyTot
-energySugarTot <- energySugar / energyTot
-
-#energyProteinTot <- (energyTot - energyProtein) / energyTot
-energyProteinTot <- energyProtein / energyTot
-
+energyFatTot <- yearMsoa$energy_fat / energyTot
+energyFibreTot <- yearMsoa$energy_fibre / energyTot
+energySatTot <- yearMsoa$energy_saturate / energyTot
+energyCarbTot <- yearMsoa$energy_carb / energyTot
+energySugarTot <- yearMsoa$energy_sugar / energyTot
+energyProteinTot <- yearMsoa$energy_protein / energyTot
 
 par(mfrow=c(2,3))
 hist(energyCarbTot, main = NULL, xlab = "Energie von Kohlenhydraten", ylab = "Haeufigkeit",breaks=seq(0,0.6,length=100), col = "red", ylim = c(0,300))
@@ -170,34 +140,26 @@ hist(energyFibreTot,main = NULL, xlab = "Energie von Ballaststoffe", ylab = "Hae
 diabetes <- read.table("diabetes_estimates_osward_2016.csv", header = TRUE, sep = ",")
 head(diabetes)
 
-
+# Einlesen der Shapefiles
 londonWardX <- st_read("./statistical-gis-boundaries-london/statistical-gis-boundaries-london/ESRI/London_Ward_CityMerged.shp")
 londonWardY <- st_read("./London-wards-2014/London-wards-2014 (1)/London-wards-2014_ESRI/London_Ward_CityMerged.shp")
 
-dim(londonWardX)
-dim(diabetes)
-dim(londonWardY)
-merged <- st_join(diabets, londonWardY)
-merged <- merge(diabetes, yearOsward, by.x = "area_id", by.y = "area_id")
-dim(merged)
-head(merged)
-
-FUN <- function(var.x, var.y, ...){
-  
-  
-}
-class(londonWardX)[1] == "sf"
-
 compare_data <- function(x, y, id.x, id.y = id.x, var.x = character(0), var.y = var.x, FUN = sum, ...) {
+  # Argumentüberprüfung muss noch bearbeitet werden!!!
+  
+  # Zwei Listen müssen übergeben werden, ansonsten nicht genügen Daten
   if(!is.list(x) | !is.list(y))
     stop("Bitte überprüfen Sie Ihre Eingabe für x und y!")
-  if(!is.character(id.x) | (!is.character(id.y) & !is.na(id.y)))
+  # ID muss als String übergeben werden (zumindest x, y nicht unbedingt. Wenn y übergeben wird, muss es auch ein String sein)
+  if(!is.character(id.x) | ((id.x != id.y) & !is.character(id.y)))
     stop("es muss eine korrekte ID angegeben werden!")
-  if(!is.character(var.x) | (!is.character(var.y) & !is.na(var.y)))
+  # Variable muss als String übergeben werden (zumindest x, y nicht unbedingt. Wenn y übergeben wird, muss es auch ein String sein)
+  if(!is.character(var.x) | ((var.x != var.y) & !is.character(var.y)))
     stop("es muss eine korrekte Variable angegeben werden!")
   
+  
+  #spezielle Behandlung bei merge von 2 sf Objekten (vllt st_join) muss man sich noch anschauen
   if(class(x)[1] == "sf" & class(y)[1] == "sf"){
-    #spezielle Behandlung bei merge von 2 sf Objekten (vllt st_join)
     mergedXandY <- merge(x %>% as.data.frame(), y %>% as.data.frame(), by.x = id.x, by.y = id.y)
     mergedXandY %>% st_sf(sf_column_name = 'geometry.x')
     mergedX <- merge(x %>% as.data.frame(), y %>% as.data.frame(), by.x = id.x, by.y = id.y, all.x = TRUE)
@@ -224,6 +186,7 @@ compare_data <- function(x, y, id.x, id.y = id.x, var.x = character(0), var.y = 
                    anzahl = c(nrow(mergedXandY),nrow(mergedX)-nrow(mergedXandY), nrow(mergedY)-nrow(mergedXandY)),
                    hektar = c(round(sumXandY,0), round(sumX-sumXandY,0), round(sumY-sumXandY,0)))
   
+  # wenn separate Variablen betrachtet werden sollen
   if(var.x != var.y){
     popXandY <- (FUN(get(var.y, mergedXandY), ...))
     popX <- (FUN(get(var.y, mergedX), ...))
@@ -235,6 +198,7 @@ compare_data <- function(x, y, id.x, id.y = id.x, var.x = character(0), var.y = 
   return(df)
 }
 
+# bin ma nu ned ganz sicher, ob des alles so stimmt
 compare_data(londonWardX, londonWardY, "GSS_CODE", "GSS_CODE", "HECTARES", "HECTARES", na.rm = TRUE)
 compare_data(diabetes, londonWardY, "area_id", "GSS_CODE", "HECTARES", na.rm= TRUE)
 compare_data(diabetes, yearOsward, "area_id", "area_id", "area_sq_km", "population", na.rm = TRUE)
