@@ -1,10 +1,5 @@
 ### Projekt ###
 
-yearBorough <- read.table("year_borough_grocery.csv", header = TRUE, sep = ",")
-yearBorough
-boroughArea <- yearBorough$area_sq_km
-boroughPopulation <- yearBorough$population
-
 yearLsoa <- read.table("year_lsoa_grocery.csv", header = TRUE, sep =",")
 yearLsoa
 lsoaArea <- yearLsoa$area_sq_km
@@ -20,94 +15,52 @@ yearOsward
 oswardArea <- yearOsward$area_sq_km
 oswardPopulation <- yearOsward$population
 
+yearBorough <- read.table("year_borough_grocery.csv", header = TRUE, sep = ",")
+yearBorough
+boroughArea <- yearBorough$area_sq_km
+boroughPopulation <- yearBorough$population
 
-sum(boroughArea)
-sum(lsoaArea)     ## alle gleich bis auf lsoaArea
-sum(msoaArea)
-sum(oswardArea)
+areas <- list(lsoa = lsoaArea, msoa =  msoaArea,  ward = oswardArea, borough = boroughArea)
+population <- list(lsoa = lsoaPopulation, msoa = msoaPopulation, ward = oswardPopulation, borough = boroughPopulation)
 
-sum(boroughPopulation)
-sum(lsoaPopulation)     ##wieder alle gleich bis auf lsoaPopulation
-sum(msoaPopulation)
-sum(oswardPopulation)
+lapply(areas, sum)     ## alle gleich bis auf lsoaArea
+lapply(population, sum)     ## wieder alle gleich bis auf lsoaPopulation
 
-
-for (i in seq_len(length(boroughArea))) {
-  print((max(boroughArea)-boroughArea[i])/max(boroughArea)*100)
+# relative Abstände
+relDif <- function(var){
+  x <- numeric()
+  for (i in seq_along(var)){
+    x <- append(x, round((max(var)-var[i])/max(var)*100,2))
+  }
+  return(x)
 }
 
-for (i in seq_len(length(lsoaArea))) {
-  print((max(lsoaArea)-lsoaArea[i])/max(lsoaArea)*100)
-}
+lapply(areas, relDif)
+lapply(population, relDif)
 
-for (i in seq_len(length(msoaArea))) {
-  print((max(msoaArea)-msoaArea[i])/max(msoaArea)*100)
-}
-
-for (i in seq_len(length(oswardArea))) {
-  print((max(oswardArea)-oswardArea[i])/max(oswardArea)*100)
-}
-
-
-for (i in seq_len(length(boroughPopulation))) {
-  print((max(boroughPopulation)-boroughPopulation[i])/max(boroughPopulation)*100)
-}
-
-for (i in seq_len(length(lsoaPopulation))) {
-  print((max(lsoaPopulation)-lsoaPopulation[i])/max(lsoaPopulation)*100)
-}
-
-for (i in seq_len(length(msoaPopulation))) {
-  print((max(msoaPopulation)-msoaPopulation[i])/max(msoaPopulation)*100)
-}
-
-for (i in seq_len(length(oswardPopulation))) {
-  print((max(oswardPopulation)-oswardPopulation[i])/max(oswardPopulation)*100)
-}
 
 ### Dataframe ###
 
-numberOfAreasBorough <- length(boroughArea)
-numberOfAreasLsoa <- length(lsoaArea)
-numberOfAreasMsoa <- length(msoaArea)
-numberOfAreasOsward <- length(oswardArea)
-
-avgSurvaceBorough <- sum(yearBorough$area_sq_km) / numberOfAreasBorough
-avgSurvaceLsoa <- sum(yearLsoa$area_sq_km) / numberOfAreasLsoa
-avgSurvaceMsoa <- sum(yearMsoa$area_sq_km) / numberOfAreasMsoa
-avgSurvaceOsward <- sum(yearOsward$area_sq_km) / numberOfAreasOsward
-
-avgPopulationBorough <- sum(boroughPopulation) / numberOfAreasBorough
-avgPopulationLsoa <- sum(lsoaPopulation) / numberOfAreasLsoa
-avgPopulationMsoa <- sum(msoaPopulation) / numberOfAreasMsoa
-avgPopulationOsward <- sum(oswardPopulation) / numberOfAreasOsward
-
-medianPopLsoa <- median(yearLsoa$population)
-medianPopMsoa <- median(yearMsoa$population)
-medianPopOsward <- median(yearOsward$population)
-medianPopBorough <- median(yearBorough$population)
-
-medianAreaLsoa <- median(yearLsoa$area_sq_km)
-medianAreaMsoa <- median(yearMsoa$area_sq_km)
-medianAreaOsward <- median(yearOsward$area_sq_km)
-medianAreaBorough <- median(yearBorough$area_sq_km)
-
+noAreas <- lapply(areas, length) 
 
 tab1Dataframe <- data.frame(
   Area = c("LSOA","MSOA","Ward","Borough"),
-  NumberOfAreas = c(numberOfAreasLsoa,numberOfAreasMsoa,numberOfAreasOsward,numberOfAreasBorough),
-  AvgSurfaces = c(avgSurvaceLsoa,avgSurvaceMsoa,avgSurvaceOsward,avgSurvaceBorough),
-  AvgPopulation = c(avgPopulationLsoa,avgPopulationMsoa,avgPopulationOsward,avgPopulationOsward),
-  MedianPopulation = c(medianPopLsoa,medianPopMsoa,medianPopOsward,medianPopBorough),
-  MedianArea = c(medianAreaLsoa,medianAreaMsoa,medianAreaOsward,medianAreaBorough),
+  NumberOfAreas = unlist(noAreas),
+  AvgSurfaces = round(unlist(Map("/", lapply(areas, sum), noAreas)),2),
+  AvgPopulation = round(unlist(Map("/", lapply(population, sum), noAreas)),0),
+  MedianPopulation = unlist(lapply(population, median)),
+  MedianArea = unlist(lapply(areas, median)),
   stringsAsFactors = FALSE
 )
+rownames(tab1Dataframe) <- NULL
 tab1Dataframe
 
+## Müss ma si nu anschaun, ob ma des so lassen
 ## Visualisieren
 par(mfrow=c(1,2))
-hist(yearLsoa$population, main = "Lsoa Bevoelkerung",xlab = "Bevoelkerung", ylab = "Haeufigkeit", col =3)
-hist(yearLsoa$area_sq_km, main = "Lsoa Flaeche",xlab = "Flaeche", ylab = "Haeufigkeit", col =4)
+hist(lsoaPopulation, main = "Lsoa Bevoelkerung", xlab = "Bevoelkerung", ylab = "Haeufigkeit",breaks= seq(min(lsoaPopulation),max(lsoaPopulation)+100, 200), col =3, freq = FALSE)
+hist(lsoaArea, main = "Lsoa Flaeche",xlab = "Flaeche", ylab = "Haeufigkeit", breaks= seq(min(lsoaArea),max(lsoaArea)+0.5, 0.5), col =4, freq = FALSE)
+
 
 
 #2
@@ -286,3 +239,15 @@ compare_data(londonWardX, londonWardY, "GSS_CODE", "GSS_CODE", "HECTARES", "HECT
 compare_data(diabetes, londonWardY, "area_id", "GSS_CODE", "HECTARES", na.rm= TRUE)
 compare_data(diabetes, yearOsward, "area_id", "area_id", "area_sq_km", "population", na.rm = TRUE)
 
+
+#6
+
+merged <- merge(yearOsward, diabetes, by= "area_id")
+
+
+# zusammenhang spearman
+corr <- cor.test(merged$estimated_diabetes_prevalence, merged$energy_tot, method = "spearman")
+corr  # 0.58
+
+par(mfrow=c(1,1))
+plot(merged$estimated_diabetes_prevalence, merged$energy_tot, main = "Streudiagramm", xlab = "geschätzte Diabetes-Prävalenz", ylab = "Energie der Nährstoffe")
