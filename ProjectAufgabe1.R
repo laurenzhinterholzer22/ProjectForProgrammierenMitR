@@ -26,6 +26,8 @@ population <- list(lsoa = lsoaPopulation, msoa = msoaPopulation, ward = oswardPo
 lapply(areas, sum)     ## alle gleich bis auf lsoaArea
 lapply(population, sum)     ## wieder alle gleich bis auf lsoaPopulation
 
+
+
 # relative Abstände
 relDif <- function(var){
   x <- numeric()
@@ -34,9 +36,12 @@ relDif <- function(var){
   }
   return(x)
 }
-
+areas
 lapply(areas, relDif)
+
 lapply(population, relDif)
+
+
 
 
 ### Dataframe ###
@@ -58,8 +63,8 @@ tab1Dataframe
 ## Müss ma si nu anschaun, ob ma des so lassen
 ## Visualisieren
 par(mfrow=c(1,2))
-hist(lsoaPopulation, main = "Lsoa Bevoelkerung", xlab = "Bevoelkerung", ylab = "Haeufigkeit",breaks= seq(min(lsoaPopulation),max(lsoaPopulation)+100, 200), col =3, freq = FALSE)
-hist(lsoaArea, main = "Lsoa Flaeche",xlab = "Flaeche", ylab = "Haeufigkeit", breaks= seq(min(lsoaArea),max(lsoaArea)+0.5, 0.5), col =4, freq = FALSE)
+hist(lsoaPopulation, main = "Lsoa Bevoelkerung", xlab = "Bevoelkerung", ylab = "Haeufigkeit",breaks= seq(min(lsoaPopulation),max(lsoaPopulation)+100, 200), col =3, freq = FALSE, xlim = c(0,4000))
+hist(lsoaArea, main = "Lsoa Flaeche",xlab = "Flaeche", ylab = "Haeufigkeit", breaks= seq(min(lsoaArea),max(lsoaArea)+0.5, 0.5), col =4, freq = FALSE, xlim = c(0,4))
 
 
 
