@@ -71,7 +71,7 @@ hist(lsoaArea, main = "Lsoa Flaeche",xlab = "Flaeche", ylab = "Haeufigkeit", bre
 #2
 install.packages("sf")
 library(sf)
-boundariesLondon <- st_read("LSOA_2011_London_gen_MHW.shp")
+boundariesLondon <- st_read("./statistical-gis-boundaries-london/statistical-gis-boundaries-london/ESRI/LSOA_2011_London_gen_MHW.shp")
 
 class(boundariesLondon)
 dim(boundariesLondon)
@@ -176,7 +176,7 @@ londonWardY <- st_read("./London-wards-2014/London-wards-2014 (1)/London-wards-2
 compare_data <- function(x, y, id.x, id.y = id.x, var.x = character(0), var.y = var.x, FUN = sum, ...) {
   # Argumentüberprüfung muss noch bearbeitet werden!!!
   
-  # Zwei Listen müssen übergeben werden, ansonsten nicht genügen Daten
+  # Zwei Listen müssen übergeben werden, ansonsten nicht genügend Daten
   if(!is.list(x) | !is.list(y))
     stop("Bitte überprüfen Sie Ihre Eingabe für x und y!")
   # ID muss als String übergeben werden (zumindest x, y nicht unbedingt. Wenn y übergeben wird, muss es auch ein String sein)

@@ -2,31 +2,34 @@
 title: "Projektarbeit"
 author: "Laurenz Hinterholzer & Manuel Karlsberger"
 date: "7/22/2020"
-output: html_document
+output:
+  html_document:
+    df_print: paged
+  word_document: default
+  pdf_document: default
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 Aufgabe 1
 
 Einlesen der Daten
 
-```{r eval =FALSE}
-yearLsoa <- read.csv(file = "C:/Users/laurenz/R/year_lsoa_grocery.csv", header = TRUE, sep =",")
-yearLsoa
+```{r}
+yearLsoa <- read.csv(file = "year_lsoa_grocery.csv", header = TRUE, sep =",")
 lsoaArea <- yearLsoa$area_sq_km
 lsoaPopulation <- yearLsoa$population
 
-yearMsoa <- read.csv(file = "C:/Users/laurenz/R/year_msoa_grocery.csv", header = TRUE, sep =",")
-yearMsoa
+yearMsoa <- read.csv(file = "year_msoa_grocery.csv", header = TRUE, sep =",")
 msoaArea <- yearMsoa$area_sq_km
 msoaPopulation <- yearMsoa$population
 
-yearOsward <- read.csv(file = "C:/Users/laurenz/R/year_osward_grocery.csv", header = TRUE, sep =",")
-yearOsward
+yearOsward <- read.csv(file = "year_osward_grocery.csv", header = TRUE, sep =",")
 oswardArea <- yearOsward$area_sq_km
 oswardPopulation <- yearOsward$population
 
-yearBorough <- read.csv(file = "C:/Users/laurenz/R/year_borough_grocery.csv", header = TRUE, sep = ",")
-yearBorough
+yearBorough <- read.csv(file = "year_borough_grocery.csv", header = TRUE, sep = ",")
 boroughArea <- yearBorough$area_sq_km
 boroughPopulation <- yearBorough$population
 
@@ -34,7 +37,7 @@ boroughPopulation <- yearBorough$population
  Bestimmung der Gesamtbevoelkerung, Gesamtflaeche und relativen porzentuellen Abweichungen.
  
  
-```{r eval =FALSE}
+```{r results="hide"}
 areas <- list(lsoa = lsoaArea, msoa =  msoaArea,  ward = oswardArea, borough = boroughArea)
 population <- list(lsoa = lsoaPopulation, msoa = msoaPopulation, ward = oswardPopulation, borough = boroughPopulation)
 
@@ -49,23 +52,22 @@ relDif <- function(var){
   }
   return(x)
 }
-areas
-lapply(areas, relDif)
 
+lapply(areas, relDif)
 lapply(population, relDif)
 ```
-Nachdem dei vier Aggregationsgrade eingelesen und nach der Flaeche und Bevoelkerung jeweils getrennt und gelistet wurden, haben wir mit lapply jeweils die Gesamtflaeche und Gesamtbevoelkerung bestimmt.
-Dabei wurde festegestellt, dass bis auf den Aggregationsgrad LSOA, alle Grade 1572.48km2 Flaeche und  8666930 Einwohner haben.
+Nachdem die vier Aggregationsgrade eingelesen und nach der Flaeche und Bevoelkerung jeweils getrennt und gelistet wurden, haben wir mit lapply jeweils die Gesamtflaeche und Gesamtbevoelkerung bestimmt.
+Dabei wurde festgestellt, dass bis auf den Aggregationsgrad LSOA, alle Grade 1572.48km2 Flaeche und  8666930 Einwohner haben.
 LSOA hat um 0,7 km2 weniger Flaeche und um 2822 weniger Einwohner als die Anderen.
 
-Bei der Berechnung der jeweiligen relativen prozentuellen Abweichungen vom jewieligen Maximum kann man  aufgrund einiger Ausreissern bei allen Aggregationsgraden eine grossteils hohe Abweichung vom Maximum festellen.
+Bei der Berechnung der jeweiligen relativen prozentuellen Abweichungen vom jeweiligen Maximum kann man aufgrund einiger Ausreißern bei allen Aggregationsgraden eine großteils hohe Abweichung vom Maximum feststellen.
 
 
 
 
 Dataframe 
 
-```{r eval =FALSE}
+```{r}
 noAreas <- lapply(areas, length) 
 
 tab1Dataframe <- data.frame(
@@ -84,7 +86,7 @@ Der Dataframe der Tabelle 1 in Aiello et al. (2020) ist annaehernd der selbe wie
 
 Visualisierung
 
-```{r eval = FALSE}
+```{r}
 par(mfrow=c(1,2))
 hist(lsoaPopulation, main = "Lsoa Bevoelkerung", xlab = "Bevoelkerung", ylab = "Haeufigkeit",breaks= seq(min(lsoaPopulation),max(lsoaPopulation)+100, 200), col =3, freq = FALSE, xlim = c(0,4000))
 hist(lsoaArea, main = "Lsoa Flaeche",xlab = "Flaeche", ylab = "Haeufigkeit", breaks= seq(min(lsoaArea),max(lsoaArea)+0.5, 0.5), col =4, freq = FALSE, xlim = c(0,4))
