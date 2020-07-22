@@ -80,7 +80,6 @@ colnames(mergeboundaries)
 install.packages("colorspace")
 library("colorspace")
 
-
 par(mfrow=c(1,2))
 # des mit log geht vllt anders a nu
 # mergeboundaries$logvals <- log(mergeboundaries$num_transactions)
@@ -126,12 +125,37 @@ energySugarTot <- yearMsoa$energy_sugar / energyTot
 energyProteinTot <- yearMsoa$energy_protein / energyTot
 
 par(mfrow=c(2,3))
-hist(energyCarbTot, main = NULL, xlab = "Energie von Kohlenhydraten", ylab = "Haeufigkeit",breaks=seq(0,0.6,length=100), col = "red", ylim = c(0,300))
-hist(energyFatTot,main = NULL, xlab = "Energie von Fetten", ylab = "Haeufigkeit",breaks=seq(0,0.6,length=100), col = "purple", ylim = c(0,300))
-hist(energySatTot, main = NULL, xlab = "Energie von Saturated", ylab = "Haeufigkeit",breaks=seq(0,0.6,length=100), col = "pink", ylim = c(0,300))
-hist(energySugarTot, main = NULL, xlab = "Energie von Zucker", ylab = "Haeufigkeit",breaks=seq(0,0.6,length=100), col = "orange", ylim = c(0,300))
-hist(energyProteinTot, main = NULL, xlab = "Energie von Eiweiß", ylab = "Haeufigkeit",breaks=seq(0,0.6,length=100), col = "green", ylim = c(0,300))
-hist(energyFibreTot,main = NULL, xlab = "Energie von Ballaststoffe", ylab = "Haeufigkeit",breaks=seq(0,0.6,length=100), col = "lightgreen", ylim = c(0,300))
+
+h <- hist(energyCarbTot, breaks=seq(0,0.6,length=75), plot = F)
+h$density <- h$counts/sum(h$counts)
+plot(h, main = NULL, xlab = "Energie von Kohlenhydraten",xlim = c(0,0.6), ylim = c(0,0.6), col = "red", freq = F)
+
+h <- hist(energyFatTot, breaks=seq(0,0.6,length=75), plot = F)
+h$density <- h$counts/sum(h$counts)
+plot(h, main = NULL, xlab = "Energie von Fetten",xlim = c(0,0.6), ylim = c(0,0.6), col = "purple", freq = F)
+
+h <- hist(energySatTot, breaks=seq(0,0.6,length=75), plot = F)
+h$density <- h$counts/sum(h$counts)
+plot(h, main = NULL, xlab = "Energie von Saturated",xlim = c(0,0.6), ylim = c(0,0.6), col = "pink", freq = F)
+
+h <- hist(energySugarTot, breaks=seq(0,0.6,length=75), plot = F)
+h$density <- h$counts/sum(h$counts)
+plot(h, main = NULL, xlab = "Energie von Zucker",xlim = c(0,0.6), ylim = c(0,0.6), col = "orange", freq = F)
+
+h <- hist(energyProteinTot, breaks=seq(0,0.6,length=75), plot = F)
+h$density <- h$counts/sum(h$counts)
+plot(h, main = NULL, xlab = "Energie von Eiweiß",xlim = c(0,0.6), ylim = c(0,0.6), col = "green", freq = F)
+
+h <- hist(energyFibreTot, breaks=seq(0,0.6,length=75), plot = F)
+h$density <- h$counts/sum(h$counts)
+plot(h, main = NULL, xlab = "Energie von Ballaststoffe",xlim = c(0,0.6), ylim = c(0,0.6), col = "lightgreen", freq = F)
+
+
+#hist(energyFatTot,main = NULL, xlab = "Energie von Fetten", ylab = "Haeufigkeit",breaks=seq(0,0.6,length=100), col = "purple", ylim = c(0,300), plot = F)
+#hist(energySatTot, main = NULL, xlab = "Energie von Saturated", ylab = "Haeufigkeit",breaks=seq(0,0.6,length=100), col = "pink", ylim = c(0,300))
+#hist(energySugarTot, main = NULL, xlab = "Energie von Zucker", ylab = "Haeufigkeit",breaks=seq(0,0.6,length=100), col = "orange", ylim = c(0,300))
+#hist(energyProteinTot, main = NULL, xlab = "Energie von Eiweiß", ylab = "Haeufigkeit",breaks=seq(0,0.6,length=100), col = "green", ylim = c(0,300))
+#hist(energyFibreTot,main = NULL, xlab = "Energie von Ballaststoffe", ylab = "Haeufigkeit",breaks=seq(0,0.6,length=100), col = "lightgreen", ylim = c(0,300))
 
 
 
