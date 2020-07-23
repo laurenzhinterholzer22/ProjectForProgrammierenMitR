@@ -94,4 +94,69 @@ hist(lsoaArea, main = "Lsoa Flaeche",xlab = "Flaeche", ylab = "Haeufigkeit", bre
 ```
 Schlussendlich wurden die Daten des kleinsten Aggregationsgrades, also Lsoa, visualisiert. Um die Bevoelkerung und Flaeche zu visulisieren, haben wir ein Histogramm verwendet und die Daten bei der Bevoelkerung auf 0-4000 und bei der Flaeche auf 0-4 beschraenkt, um die Ausreisser zu eliminieren und 
 die aussagekraeftigen Daten besser zu veranschaulichen. Die bevoelkerung hat die meisten Auspraegungen bei ca 1800 und die Flaeche zwischen 0 und 1.
-  
+
+Aufgabe 2
+
+Einlesen der Daten
+
+```{r results="hide"}
+library(sf)
+boundariesLondon <- st_read("./statistical-gis-boundaries-london/statistical-gis-boundaries-london/ESRI/LSOA_2011_London_gen_MHW.shp")
+```
+
+Bestimmung von Klasse, Dimensionen und Spaltennamen
+
+```{r}
+class(boundariesLondon)
+dim(boundariesLondon)
+colnames(boundariesLondon)
+```
+
+Verknuepfung der Daten mit Lsoa
+
+```{r}
+mergeboundaries <- merge(boundariesLondon, yearLsoa, by.x = "LSOA11CD", by.y = "area_id")
+class(mergeboundaries)
+dim(mergeboundaries)    
+colnames(mergeboundaries)
+```
+Visualisierung
+
+```{r}
+library("colorspace")
+
+par(mfrow=c(1,2))
+
+plot(mergeboundaries["num_transactions"], logz = TRUE, main = "Number of Transactions", pal = terrain_hcl)
+
+mergeboundaries$perresident <- mergeboundaries$num_transactions/mergeboundaries$population
+plot(mergeboundaries["perresident"], logz = TRUE, main = "Transactions per resident", pal = terrain_hcl) 
+```
+Bei der Reproduktion der Grafik Abbildung 3 in Aiello et al. (2020) erkennt man bis auf die Farbpalette keine Unterschiede. Weiters ist die Grafik welche die Anzahl der Transaktionen visualisiert, bis auf die Skalierung annaehernd ident.
+
+Aufgabe 3
+
+Visualisierung
+
+```{r}
+sequ <- seq(0, 1, by = 0.01)
+
+dat <- list(lsoa = yearLsoa, msoa = yearMsoa, ward = yearOsward)
+
+repr <- function(var){
+  x <- numeric()
+  for(i in sequ){
+    x <- append(x, nrow(var[var$representativeness_norm > i,])/nrow(var))
+  }
+  return(list(seq = sequ, perc = x))
+}
+
+normRepr <- lapply(dat, repr)
+
+par(mfrow=c(1,1))
+plot(as.data.frame(normRepr$lsoa), main = "Representativitaet", xlab = "Threshold")
+lines(as.data.frame(normRepr$msoa), lty = 1)
+lines(as.data.frame(normRepr$ward), lty = 2)
+legend("topright", c("lsoa", "msoa", "ward"), lty = c(NA,1,2), pch = c(1,NA,NA))
+```
+Bei dieser Grafik wird mithilfe der Daten von Lsoa,Msoa und Ward die Abbildung 4 links in Aiello et al. (2020) visualisiert.Wobei man bei dieser Grafik schon einen deutlichen Unterschied zu der Grafik in Aiello sieht. Bei Aiello sind die drei Aggregationsgrade annaehernd ident und naehern sich bereits bei 0.4 Threhold der X-Achse. Bei unserer Grafik verhaelt  sich nur Lsoa wie bei Aello und Msoa und Ward flachen erst ab 0.5 ab und schneiden erst bei 0.8 der X-Achse.
