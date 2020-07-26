@@ -14,6 +14,23 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 # **Aufgabe 1**
 ***
+Tabelle 1 in Aiello et al. (2020) gibt einen Überblick über die Regionen je nach Aggregationsgrad nach Anzahl,
+durchschnittlicher Fläche und durchschnittlicher Anzahl an Bevölkerung.
+Die Daten dazu sind enthalten in den Dateien year_*_grocery.csv, wobei * entweder borough, lsoa, msoa
+oder osward ist. Die Variablen area_sq_km und population enthalten die Information bzgl. Fläche und
+Bevölkerung.
+  
+* Laden Sie die Daten in R ein   
+* Überprüfen Sie, ob die Gesamtbevölkerung und Gesamtfläche gleich ist, egal welcher Aggregationsgrad
+verwendet wird. Bestimmen Sie die relativen prozentuellen Abweichungen vom jeweiligen Maximum. 
+* Erstellen Sie einen Dataframe in R, der Tabelle 1 in Aiello et al. (2020) reproduziert. Prüfen Sie, ob die exakt selben Ergebnisse reproduzierbar sind.
+* Ergänzen Sie den Dataframe, indem Sie auch den Median der Bevölkerung und Fläche bestimmen.
+* Visualisierung Sie die Verteilung von Bevölkerung und Fläche fur den kleinsten Aggregationsgrad.
+* Interpretieren Sie die Ergebnisse.
+  
+  
+
+
 
 ## Einlesen der Daten
 
@@ -35,7 +52,7 @@ boroughArea <- yearBorough$area_sq_km
 boroughPopulation <- yearBorough$population
 
 ```
-## Bestimmung der Gesamtbevoelkerung, Gesamtflaeche und relativen porzentuellen Abweichungen
+## Bestimmung der Gesamtbevölkerung, Gesamtfläche und relativen prozentuellen Abweichungen
  
  
 ```{r results="hide"}
@@ -57,9 +74,9 @@ relDif <- function(var){
 lapply(areas, relDif)
 lapply(population, relDif)
 ```
-Nachdem die vier Aggregationsgrade eingelesen und nach der Flaeche und Bevoelkerung jeweils getrennt und gelistet wurden, haben wir mit lapply jeweils die Gesamtflaeche und Gesamtbevoelkerung bestimmt.
-Dabei wurde festgestellt, dass bis auf den Aggregationsgrad LSOA, alle Grade 1572.48km2 Flaeche und  8666930 Einwohner haben.
-LSOA hat um 0,7 km2 weniger Flaeche und um 2822 weniger Einwohner als die Anderen.
+Nachdem die vier Aggregationsgrade eingelesen und nach der Fläche und Bevölkerung jeweils getrennt und gelistet wurden, haben wir mit lapply jeweils die Gesamtfläche und Gesamtbevölkerung bestimmt.
+Dabei wurde festgestellt, dass bis auf den Aggregationsgrad LSOA, alle Grade 1572.48km2 Fläche und  8666930 Einwohner haben.
+LSOA hat um 0,7 km2 weniger Fläche und um 2822 weniger Einwohner als die Anderen.
 
 Bei der Berechnung der jeweiligen relativen prozentuellen Abweichungen vom jeweiligen Maximum kann man aufgrund einiger Ausreißern bei allen Aggregationsgraden eine großteils hohe Abweichung vom Maximum feststellen.
 
@@ -82,7 +99,7 @@ tab1Dataframe <- data.frame(
 rownames(tab1Dataframe) <- NULL
 tab1Dataframe
 ```
-Der Dataframe der Tabelle 1 in Aiello et al. (2020) ist annaehernd der selbe wie den wir reproduziert haben. Ein kleiner Unterschied kann man bei der durchschnittlichen Flaeche bei dem Aggregationsgrad Borough festellen, wobei dieser Unterschied auch ein Rundungsfehler sein koennte.
+Der Dataframe der Tabelle 1 in Aiello et al. (2020) ist annähernd der selbe wie den wir reproduziert haben. Ein kleiner Unterschied kann man bei der durchschnittlichen Fläche bei dem Aggregationsgrad Borough festellen, wobei dieser Unterschied auch ein Rundungsfehler sein könnte.
 
 ## Visualisierung
 
@@ -93,11 +110,24 @@ hist(lsoaArea, main = "Lsoa Flaeche",xlab = "Flaeche", ylab = "Haeufigkeit", bre
 
 ```
     
-  Schlussendlich wurden die Daten des kleinsten Aggregationsgrades, also Lsoa, visualisiert. Um die Bevoelkerung und Flaeche zu visulisieren, haben wir ein Histogramm verwendet und die Daten bei der Bevoelkerung auf 0-4000 und bei der Flaeche auf 0-4 beschraenkt, um die Ausreisser zu eliminieren und 
-die aussagekraeftigen Daten besser zu veranschaulichen. Die bevoelkerung hat die meisten Auspraegungen bei ca 1800 und die Flaeche zwischen 0 und 1.
+  Schlussendlich wurden die Daten des kleinsten Aggregationsgrades, also Lsoa, visualisiert. Um die Bevölkerung und Fläche zu visulisieren, haben wir ein Histogramm verwendet und die Daten bei der Bevölkerung auf 0-4000 und bei der Fläche auf 0-4 beschränkt, um die Ausreißer zu eliminieren und 
+die aussagekräftigen Daten besser zu veranschaulichen. Die Bevölkerung hat die meisten Ausprägungen bei ca 1800 und die Fläche zwischen 0 und 1.
 
 # **Aufgabe 2**
 ***
+Abbildung 3 in Aiello et al. (2020) visualisiert die Anzahl der Transaktionen auf LSOA Level.  
+  
+* Entpacken Sie die Daten aus statistical-gis-boundaries-london.zip, sodass diese im Verzeichnis
+statistical-gis-boundaries-london sind.
+* Laden Sie die Daten statistical-gis-boundaries-london/ESRI/LSOA_2011_London_gen_MHW.shp mithilfe von st_read aus dem Paket sf in R ein.
+* Bestimmen Sie die Klasse des Objekts sowie die Dimensionen und die Spaltennamen.
+* Verknüpfen Sie das Objekt mit den Daten aus year_lsoa_grocery.csv anhand der Variable LSOA11CD
+bzw. area_id. Bestimmen Sie die Klasse des Objekts sowie die Dimensionen und die Spaltennamen.
+* Erstellen Sie die Grafik mit der Anzahl der Transaktionen. Achten Sie darauf, dass die Einteilung der
+Farbskala auf der logarithmierten Skala erfolgt und übergeben Sie eine passende Palette via pal.
+* Erstellen Sie eine analoge Grafik mit der Anzahl der Transaktionen pro Einwohner.
+* Vergleichen Sie und interpretieren Sie die Grafiken.
+  
 ## Einlesen der Daten
 
 ```{r results="hide"}
@@ -113,7 +143,7 @@ dim(boundariesLondon)
 colnames(boundariesLondon)
 ```
 
-## Verknuepfung der Daten mit Lsoa
+## Verknüpfung der Daten mit Lsoa
 
 ```{r}
 mergeboundaries <- merge(boundariesLondon, yearLsoa, by.x = "LSOA11CD", by.y = "area_id")
@@ -134,10 +164,15 @@ mergeboundaries$perresident <- mergeboundaries$num_transactions/mergeboundaries$
 plot(mergeboundaries["perresident"], logz = TRUE, main = "Transactions per resident", pal = terrain_hcl) 
 ```
     
-  Bei der Reproduktion der Grafik Abbildung 3 in Aiello et al. (2020) erkennt man bis auf die Farbpalette keine Unterschiede. Weiters ist die Grafik welche die Anzahl der Transaktionen visualisiert, bis auf die Skalierung annaehernd ident.
+  Bei der Reproduktion der Grafik Abbildung 3 in Aiello et al. (2020) erkennt man bis auf die Farbpalette keine Unterschiede. Weiters ist die Grafik welche die Anzahl der Transaktionen visualisiert, bis auf die Skalierung annähernd ident.
 
 # **Aufgabe 3**
 ***
+Abbildung 4 links in Aiello et al. (2020) visualisiert den Prozentsatz an Fl¨ache mit der normierten Repräsentativiät über einem Schwellwert gegen den Schwellwert.  
+  
+* Verwenden Sie die Daten fur LSOA, MSOA und Ward, um die Grafik zu erzeugen.
+* Vergleichen Sie Ihr Ergebnis mit der Grafik im Artikel und interpretieren Sie die Grafik.
+
 ## Visualisierung
 
 ```{r}
@@ -162,10 +197,18 @@ lines(as.data.frame(normRepr$ward), lty = 2)
 legend("topright", c("lsoa", "msoa", "ward"), lty = c(NA,1,2), pch = c(1,NA,NA))
 ```
   
-  Bei dieser Grafik wird mithilfe der Daten von Lsoa,Msoa und Ward die Abbildung 4 links in Aiello et al. (2020) visualisiert. Wobei man bei dieser Grafik schon einen deutlichen Unterschied zu der Grafik in Aiello sieht. Bei Aiello sind die drei Aggregationsgrade annaehernd ident und naehern sich bereits bei 0.4 Threhold der X-Achse. Bei unserer Grafik verhaelt  sich nur Lsoa wie bei Aello und Msoa und Ward flachen erst ab 0.5 ab und schneiden erst bei 0.8 der X-Achse.
+  Bei dieser Grafik wird mithilfe der Daten von Lsoa,Msoa und Ward die Abbildung 4 links in Aiello et al. (2020) visualisiert. Wobei man bei dieser Grafik schon einen deutlichen Unterschied zu der Grafik in Aiello sieht. Bei Aiello sind die drei Aggregationsgrade annähernd ident und nähern sich bereits bei 0.4 Threhold der X-Achse. Bei unserer Grafik verhält  sich nur Lsoa wie bei Aello und Msoa und Ward flachen erst ab 0.5 ab und schneiden erst bei 0.8 der X-Achse.
 
 # **Aufgabe 4**
 ***
+Abbildung 1 in Aiello et al. (2019) stellt die Verteilung der relativen Energie pro N¨ahrstoff an der Gesamtenergie dar.  
+  
+* Verwenden Sie die Daten fur MSOA um die Histogramme für die 6 Näahrstoffe zu erstellen. Achten Sie
+auf passende Achsenbeschriftungen und stellen Sie sicher, dass die x- und y-Achsengrenzen sowie die
+Intervalleinteilung bei allen Histogrammen gleich sind.
+* Interpretieren Sie die Grafik.  
+  
+
 ## Visualisierung
 
 ```{r}
@@ -204,11 +247,43 @@ h$density <- h$counts/sum(h$counts)
 plot(h, main = NULL, xlab = "Energie von Ballaststoffe",xlim = c(0,0.6), ylim = c(0,0.6), col = "lightgreen", freq = F)
 ```
 
-Bei diesen 6 Histogrammen haben wir die Energie der 6 Naehrstoffe dargestellt.Auf der Y-Achse ist die Dichte und auf der X-Achse die Energie Abgebildet. Der Naehrstoff mit der meisten Energie ist das Fett welches zwischen 0.4 und 0.5 bewegt. Danach kommen Kohlenhydrate, Zucker, Satured, Eiwess und am wenigsten Energie haben die Ballaststoffe.
+Bei diesen 6 Histogrammen haben wir die Energie der 6 Nährstoffe dargestellt. Auf der Y-Achse ist die Dichte und auf der X-Achse die Energie Abgebildet. Der Nährstoff mit der meisten Energie ist das Fett welches zwischen 0.4 und 0.5 bewegt. Danach kommen Kohlenhydrate, Zucker, Satured, Eiweiß und am wenigsten Energie haben die Ballaststoffe.
 
 
 # **Aufgabe 5**
 ***
+Die Datei diabetes_estimates_osward_2016.csv enthält Gesundheitsinformationen auf Ward Level. Die Ward Level Information ist auch enthalten in statistical-gis-boundaries-london/ESRI/London_Ward_CityMerged.shp bzw.
+London-wards-2014/London-wards-2014_ESRI/London_Ward_CityMerged.shp.
+Schreiben Sie eine Funktion, die die Erhebungseinheiten in x mit den Erhebungseinheiten y anhand von id.x
+bzw. id.y verknüpft und folgende Information zurückgibt: wie viele Einheiten sind sowohl in x als auch in y,
+sind nur in x bzw. nur in y, wendet FUN auf die Variablen var.x und var.y an je nach Gruppierung, ob die
+Erhebungseinheit sowohl in x als auch in y ist, nur in x bzw. nur in y ist.  
+> compare_data <- function(x, y, id.x, id.y = id.x, var.x = character(0),
++ var.y = var.x, FUN = sum, ...) {
++ ...
++ }  
+  
+* Überprüfen Sie die Argumente und geben Sie passende Fehlermeldungen aus. Das ... Argument soll
+der Funktion FUN ubergeben werden.
+* Geben Sie einen Dataframe zurück, der die drei Gruppen in den Zeilen und die Anzahl sowie das Ergebnis von FUN jeweils in den Spalten hat.
+* Wenden Sie die Funktion an, indem Sie x gleich den Daten in
+statistical-gis-boundaries-london/ESRI/London_Ward_CityMerged.shp setzen und y gleich
+den Daten in London-wards-2014/London-wards-2014_ESRI/London_Ward_CityMerged.shp setzen.
+Bestimmen Sie die passenden ID Variablen und wählen Sie die Fläche jeweils als Variable.
+* Wenden Sie die Funktion an, indem Sie x gleich den Daten in
+diabetes_estimates_osward_2016.csv setzen und y gleich den Daten in
+London-wards-2014/London-wards-2014_ESRI/London_Ward_CityMerged.shp setzen. Bestimmen Sie
+die passenden ID Variablen und wählen Sie die Fläche als Variable.
+* Wenden Sie weiters die Funktion an, indem Sie x gleich den Daten in
+diabetes_estimates_osward_2016.csv setzen und y gleich den Daten in year_osward_grocery.csv
+setzen. Bestimmen Sie die passenden ID Variablen und wählen Sie die Fläche und Bevölkerung als
+Variablen.
+* Interpretieren Sie die Ergebnisse. 
+  
+  
+
+
+
 ## Einlesen der Daten
 
 ```{r results="hide"}
@@ -288,6 +363,15 @@ compare_data(diabetes, yearOsward, "area_id", "area_id", "area_sq_km", "populati
 
 # **Aufgabe 6**
 ***
+Verknüpfen Sie die Daten aus year_osward_grocery.csv mit der Information in
+diabetes_estimates_osward_2016.csv.  
+  
+* Bestimmen Sie mithilfe Spearman Korrelation, ob es einen Zusammenhang zwischen der geschätzten
+Diabetes Prävalenz und der Energie der Nährstoffe gibt.
+* Visualisieren Sie in einem Streudiagramm den Zusammenhang zwischen der geschätzten Diabetes Prävalenz und der Energie der Nährstoffe.
+* Interpretieren Sie das Ergebnis. Gibt es empirische Evidenz, dass sich das Kaufverhalten im Supermarkt
+auf die geschätzte Diabetes Prävalenz auswirkt.  
+  
 ## Verknuepfung der Daten
 
 ```{r results="hide"}
@@ -309,5 +393,5 @@ plot(merged$estimated_diabetes_prevalence, merged$energy_tot, main = "Streudiagr
 ```
 
 Bei dieser Aufgabe wurden die Daten aus year_osward_grocery.csv mit der Information in
-diabetes_estimates_osward_2016.csv. verknuepft und die Korrelation zwischen der geschaetzten 
-Diabetes Praevalenz und der Energie der Naehrstoffe berechnet und mit einem Streudiagramm visualisiert. Die Korrelation mithilfe von Spearman ist 0.58 alos gibt es einen starken positiven Zusammenhang der beiden Vriablen. Dieses ergebnis gbestaetigt das streudiagramm welches eine positive Steigung hat. 
+diabetes_estimates_osward_2016.csv. verknüpft und die Korrelation zwischen der geschätzten 
+Diabetes Praevalenz und der Energie der Nährstoffe berechnet und mit einem Streudiagramm visualisiert. Die Korrelation mithilfe von Spearman ist 0.58 alos gibt es einen starken positiven Zusammenhang der beiden Vriablen. Dieses Ergebnis bestätigt das Streudiagramm welches eine positive Steigung hat. 
