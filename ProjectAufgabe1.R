@@ -88,9 +88,9 @@ library("colorspace")
 par(mfrow=c(1,2))
 # des mit log geht vllt anders a nu
 # mergeboundaries$logvals <- log(mergeboundaries$num_transactions)
-plot(mergeboundaries["num_transactions"], logz = TRUE, main = "Number of Transactions", pal = terrain_hcl) #palette muss ma si nu anschauen
-
 mergeboundaries$perresident <- mergeboundaries$num_transactions/mergeboundaries$population
+par(mfrow=c(1,2))
+plot(mergeboundaries["num_transactions"], logz = TRUE, main = "Number of Transactions", pal = terrain_hcl) #palette muss ma si nu anschauen
 plot(mergeboundaries["perresident"], logz = TRUE, main = "Transactions per resident", pal = terrain_hcl) #palette muss ma si nu anschauen
 
 # fast kein Unterscheid zwischen den beiden
