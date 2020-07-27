@@ -1675,8 +1675,8 @@ relDif &lt;- function(var){
 
 lapply(areas, relDif)
 lapply(population, relDif)</code></pre>
-<p>Nachdem dei vier Aggregationsgrade eingelesen und nach der Flaeche und Bevoelkerung jeweils getrennt und gelistet wurden, haben wir mit lapply jeweils die Gesamtflaeche und Gesamtbevoelkerung bestimmt. Dabei wurde festegestellt, dass bis auf den Aggregationsgrad LSOA, alle Grade 1572.48km2 Flaeche und 8666930 Einwohner haben. LSOA hat um 0,7 km2 weniger Flaeche und um 2822 weniger Einwohner als die Anderen.</p>
-<p>Bei der Berechnung der jeweiligen relativen prozentuellen Abweichungen vom jewieligen Maximum kann man aufgrund einiger Ausreissern bei allen Aggregationsgraden eine grossteils hohe Abweichung vom Maximum festellen.</p>
+<p>Nachdem die vier Aggregationsgrade eingelesen und nach der Flaeche und Bevoelkerung jeweils getrennt und gelistet wurden, haben wir mit lapply jeweils die Gesamtflaeche und Gesamtbevoelkerung bestimmt. Dabei wurde festgestellt, dass bis auf den Aggregationsgrad LSOA, alle Grade 1572.48km2 Flaeche und 8666930 Einwohner haben. LSOA hat um 0,7 km2 weniger Flaeche und um 2822 weniger Einwohner als die Anderen.</p>
+<p>Bei der Berechnung der jeweiligen relativen prozentuellen Abweichungen vom jeweiligen Maximum kann man aufgrund einiger Ausreißern bei allen Aggregationsgraden eine großteils hohe Abweichung vom Maximum feststellen.</p>
 <p>Dataframe</p>
 <pre class="r"><code>noAreas &lt;- lapply(areas, length) 
 

@@ -36,11 +36,11 @@ relDif <- function(var){
   }
   return(x)
 }
-areas
-lapply(areas, relDif)
 
-lapply(population, relDif)
-
+relD <- lapply(areas, relDif)
+str(relD)
+relD <- lapply(population, relDif)
+str(relD)
 
 
 
@@ -82,7 +82,7 @@ class(mergeboundaries)
 dim(mergeboundaries)    # zwei Reihen weniger, da diese in "yearLsoa" nicht vorhanden sind (weiß nicht, wie es gehört)
 colnames(mergeboundaries)
 
-install.packages("colorspace")
+#install.packages("colorspace")
 library("colorspace")
 
 par(mfrow=c(1,2))
@@ -121,7 +121,7 @@ legend("topright", c("lsoa", "msoa", "ward"), lty = c(NA,1,2), pch = c(1,NA,NA))
 
 
 #4
-
+energyTot <- yearMsoa$energy_tot
 energyFatTot <- yearMsoa$energy_fat / energyTot
 energyFibreTot <- yearMsoa$energy_fibre / energyTot
 energySatTot <- yearMsoa$energy_saturate / energyTot
@@ -189,54 +189,53 @@ compare_data <- function(x, y, id.x, id.y = id.x, var.x = character(0), var.y = 
   
   #spezielle Behandlung bei merge von 2 sf Objekten (vllt st_join) muss man sich noch anschauen
   if(class(x)[1] == "sf" & class(y)[1] == "sf"){
+    # verknüpft werden die Objekte, indem sie zuerst in einen Dataframe umgewandelt werden und mit der jeweiligen ID verbunden werden. Dabei wird
+    # sozusagen die Geometry-Variable deaktiviert
     mergedXandY <- merge(x %>% as.data.frame(), y %>% as.data.frame(), by.x = id.x, by.y = id.y)
+    # Danach wird die Geometry-Variable wieder "aktiviert" und wieder in ein Objekt der Klasse sf umgewandelt
     mergedXandY %>% st_sf(sf_column_name = 'geometry.x')
     mergedX <- merge(x %>% as.data.frame(), y %>% as.data.frame(), by.x = id.x, by.y = id.y, all.x = TRUE)
     mergedX %>% st_sf(sf_column_name = 'geometry.x')
     mergedY <- merge(x %>% as.data.frame(), y %>% as.data.frame(), by.x = id.x, by.y = id.y, all.y = TRUE)
     mergedY %>% st_sf(sf_column_name = 'geometry.y')
     
-    sumXandY <- (FUN(get(paste(var.x, ".x",sep = ""), mergedXandY), ...))
+    sumXandY <- sumXandY1 <- (FUN(get(paste(var.x, ".x",sep = ""), mergedXandY), ...))
+    sumXandY2 <- (FUN(get(paste(var.y, ".x",sep = ""), mergedXandY), ...))
     sumX <- (FUN(get(paste(var.x,".x",sep = ""), mergedX), ...))
-    sumY <- (FUN(get(paste(var.x,".y",sep = ""), mergedY),...))
+    sumY <- (FUN(get(paste(var.y,".y",sep = ""), mergedY), ...))
   }
   else{
     mergedXandY <- merge(x, y, by.x = id.x, by.y = id.y)
     mergedX <- merge(x, y, by.x = id.x, by.y = id.y, all.x = TRUE)
     mergedY <- merge(x, y, by.x = id.x, by.y = id.y, all.y = TRUE)
     
-    sumXandY <- (FUN(get(var.x, mergedXandY), ...))
+    sumXandY <- sumXandY1 <- (FUN(get(var.x, mergedXandY), ...))
+    sumXandY2 <- (FUN(get(var.y, mergedXandY), ...))
     sumX <- (FUN(get(var.x, mergedX), ...))
-    sumY <- (FUN(get(var.x, mergedY),...))
+    sumY <- (FUN(get(var.y, mergedY),...))
   }
   
+  # Wenn die Variablen, auf die die Funktion angewendet werden soll nicht gleich sind, wird als Ergebnis bei der Erhebungseinheit X und Y NA gewählt  
+  if((var.x != var.y) | !(all(c(var.x,var.y) %in% colnames(x)) & all(c(var.x, var.y) %in% colnames(y))))
+    sumXandY <- NA
   
   df <- data.frame(mergeType = c("X und Y", "nur X", "nur Y"), 
                    anzahl = c(nrow(mergedXandY),nrow(mergedX)-nrow(mergedXandY), nrow(mergedY)-nrow(mergedXandY)),
-                   hektar = c(round(sumXandY,0), round(sumX-sumXandY,0), round(sumY-sumXandY,0)))
-  
-  # wenn separate Variablen betrachtet werden sollen
-  if(var.x != var.y){
-    popXandY <- (FUN(get(var.y, mergedXandY), ...))
-    popX <- (FUN(get(var.y, mergedX), ...))
-    popY <- (FUN(get(var.y, mergedY), ...))
-    df$hektar <- df$hektar*100
-    df <- cbind(df, bevölkerung = c(popXandY, popX-popXandY, popY-popXandY))
-  }
+                   ergebnis = c(round(sumXandY,0), if(var.x %in% colnames(x)) round(sumX-sumXandY1,0) else NA,
+                                if(var.y %in% colnames(y)) round(sumY-sumXandY2,0) else NA))
  
   return(df)
 }
 
-# bin ma nu ned ganz sicher, ob des alles so stimmt
 compare_data(londonWardX, londonWardY, "GSS_CODE", "GSS_CODE", "HECTARES", "HECTARES", na.rm = TRUE)
 compare_data(diabetes, londonWardY, "area_id", "GSS_CODE", "HECTARES", na.rm= TRUE)
-compare_data(diabetes, yearOsward, "area_id", "area_id", "area_sq_km", "population", na.rm = TRUE)
+compare_data(diabetes, yearOsward, "area_id", "area_id", "area_sq_km", na.rm = TRUE)
+compare_data(diabetes, yearOsward, "area_id", "area_id", "gp_patients", "population", na.rm = TRUE)
+sum(diabetes$gp_patients)
 
 
 #6
-
 merged <- merge(yearOsward, diabetes, by= "area_id")
-
 
 # zusammenhang spearman
 corr <- cor.test(merged$estimated_diabetes_prevalence, merged$energy_tot, method = "spearman")
