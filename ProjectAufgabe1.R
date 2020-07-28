@@ -83,16 +83,11 @@ colnames(mergeboundaries)
 
 #install.packages("colorspace")
 library("colorspace")
-
-par(mfrow=c(1,2))
-# des mit log geht vllt anders a nu
-# mergeboundaries$logvals <- log(mergeboundaries$num_transactions)
+s
 mergeboundaries$perresident <- mergeboundaries$num_transactions/mergeboundaries$population
 par(mfrow=c(1,2))
-plot(mergeboundaries["num_transactions"], logz = TRUE, main = "Number of Transactions", pal = terrain_hcl) #palette muss ma si nu anschauen
-plot(mergeboundaries["perresident"], logz = TRUE, main = "Transactions per resident", pal = terrain_hcl) #palette muss ma si nu anschauen
-
-# fast kein Unterscheid zwischen den beiden
+plot(mergeboundaries["num_transactions"], logz = TRUE, main = "Number of Transactions", pal= function(...) colorspace::sequential_hcl(...,palette = "Blue-Yellow", rev = TRUE))
+plot(mergeboundaries["perresident"], logz = TRUE, main = "Transactions per resident", pal= function(...) colorspace::sequential_hcl(...,palette = "YlGnBu",rev = TRUE))
 
 
 #3

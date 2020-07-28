@@ -12,8 +12,8 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-# **Aufgabe 1**
 ***
+# **Aufgabe 1**
 Tabelle 1 in Aiello et al. (2020) gibt einen Überblick über die Regionen je nach Aggregationsgrad nach Anzahl,
 durchschnittlicher Fläche und durchschnittlicher Anzahl an Bevölkerung.
 Die Daten dazu sind enthalten in den Dateien year_*_grocery.csv, wobei * entweder borough, lsoa, msoa
@@ -116,8 +116,9 @@ hist(lsoaArea, main = "Lsoa Flaeche",xlab = "Flaeche", ylab = "Dichte", breaks= 
     
 Schlussendlich wurden die Daten des kleinsten Aggregationsgrades, also Lsoa, visualisiert. Um die Bevölkerung und Fläche zu visualisieren, haben wir ein Histogramm verwendet und uns dazu entschlossen die Daten bis zum 0,99-Quantil darzustellen, da die Veranschaulichung der Verteilung viel besser ist, wenn die Ausreißer nach oben gefiltert werden. Die Bevölkerung hat die meisten Ausprägungen bei ca 1800 und die Fläche zwischen 0.1 und 0.4 km2, was auch aus dem vorherigen Dataframe entnommen werden kann.
 
-# **Aufgabe 2**
 ***
+# **Aufgabe 2**
+
 Abbildung 3 in Aiello et al. (2020) visualisiert die Anzahl der Transaktionen auf LSOA Level.  
   
 * Entpacken Sie die Daten aus statistical-gis-boundaries-london.zip, sodass diese im Verzeichnis
@@ -165,16 +166,17 @@ library("colorspace")
 
 par(mfrow=c(1,2))
 
-plot(mergeboundaries["num_transactions"], logz = TRUE, main = "Number of Transactions", pal = terrain_hcl)
-
 mergeboundaries$perresident <- mergeboundaries$num_transactions/mergeboundaries$population
-plot(mergeboundaries["perresident"], logz = TRUE, main = "Transactions per resident", pal = terrain_hcl) 
+
+plot(mergeboundaries["num_transactions"], logz = TRUE, main = "Number of Transactions", pal= function(...) colorspace::sequential_hcl(...,palette = "Blue-Yellow", rev = TRUE))
+plot(mergeboundaries["perresident"], logz = TRUE, main = "Transactions per resident", pal= function(...) colorspace::sequential_hcl(...,palette = "Blue-Yellow",rev = TRUE))
 ```
     
 Bei der Reproduktion der Grafik Abbildung 3 in Aiello et al. (2020) erkennt man bis auf die Farbpalette keine Unterschiede. Weiters ist die Grafik welche die Anzahl der Transaktionen visualisiert, bis auf die Skalierung annähernd ident.
 
-# **Aufgabe 3**
 ***
+# **Aufgabe 3**
+
 Abbildung 4 links in Aiello et al. (2020) visualisiert den Prozentsatz an Fläche mit der normierten Repräsentativiät über einem Schwellwert gegen den Schwellwert.  
   
 * Verwenden Sie die Daten fur LSOA, MSOA und Ward, um die Grafik zu erzeugen.
@@ -206,8 +208,9 @@ legend("topright", c("lsoa", "msoa", "ward"), lty = c(NA,1,2), pch = c(1,NA,NA))
   
 Bei dieser Grafik wird mithilfe der Daten von Lsoa, Msoa und Ward die Abbildung 4 links in Aiello et al. (2020) visualisiert. Wobei man bei dieser Grafik schon einen deutlichen Unterschied zu der Grafik in Aiello sieht. Bei Aiello sind die drei Aggregationsgrade annähernd ident und nähern sich bereits bei 0.4 Threshold der X-Achse. Bei unserer Grafik verhält sich nur Lsoa wie bei Aello und Msoa und Ward flachen erst ab 0.5 ab und schneiden erst bei 0.8 die X-Achse.
 
-# **Aufgabe 4**
 ***
+# **Aufgabe 4**
+
 Abbildung 1 in Aiello et al. (2019) stellt die Verteilung der relativen Energie pro Nährstoff an der Gesamtenergie dar.  
   
 * Verwenden Sie die Daten fur MSOA um die Histogramme für die 6 Nährstoffe zu erstellen. Achten Sie
@@ -257,8 +260,9 @@ plot(h, main = NULL, xlab = "Energie von Ballaststoffe",xlim = c(0,0.6), ylim = 
 Bei diesen 6 Histogrammen haben wir die Energie der 6 Nährstoffe dargestellt. Auf der Y-Achse ist die Dichte und auf der X-Achse die Energie Abgebildet. Die Londoner kaufen am meisten Produkte mit Fett und Kohlenhydraten. Am wenigsten werden Ballaststoffe eingekauft. 
 
 
-# **Aufgabe 5**
 ***
+# **Aufgabe 5**
+
 Die Datei diabetes_estimates_osward_2016.csv enthält Gesundheitsinformationen auf Ward Level. Die Ward Level Information ist auch enthalten in statistical-gis-boundaries-london/ESRI/London_Ward_CityMerged.shp bzw.
 London-wards-2014/London-wards-2014_ESRI/London_Ward_CityMerged.shp.
 Schreiben Sie eine Funktion, die die Erhebungseinheiten in x mit den Erhebungseinheiten y anhand von id.x
@@ -390,8 +394,9 @@ Zu den selben Daten soll auch noch die Bevölkerung betrachtet werden. Natürlic
 
 
 
-# **Aufgabe 6**
 ***
+# **Aufgabe 6**
+
 Verknüpfen Sie die Daten aus year_osward_grocery.csv mit der Information in
 diabetes_estimates_osward_2016.csv.  
   
