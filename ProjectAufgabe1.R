@@ -60,12 +60,11 @@ tab1Dataframe <- data.frame(
 rownames(tab1Dataframe) <- NULL
 tab1Dataframe
 
-## Müss ma si nu anschaun, ob ma des so lassen
+
 ## Visualisieren
 par(mfrow=c(1,2))
-hist(lsoaPopulation, main = "Lsoa Bevoelkerung", xlab = "Bevoelkerung", ylab = "Haeufigkeit",breaks= seq(min(lsoaPopulation),max(lsoaPopulation)+100, 200), col =3, freq = FALSE, xlim = c(0,4000))
-hist(lsoaArea, main = "Lsoa Flaeche",xlab = "Flaeche", ylab = "Haeufigkeit", breaks= seq(min(lsoaArea),max(lsoaArea)+0.5, 0.5), col =4, freq = FALSE, xlim = c(0,4))
-
+hist(lsoaPopulation, main = "Lsoa Bevoelkerung", xlab = "Bevoelkerung", ylab = "Dichte",breaks= seq(min(lsoaPopulation),max(lsoaPopulation)+100, 100), col =3, freq = FALSE, xlim = c(min(lsoaPopulation),quantile(lsoaPopulation,probs = 0.99)))
+hist(lsoaArea, main = "Lsoa Flaeche",xlab = "Flaeche", ylab = "Dichte", breaks= seq(min(lsoaArea),max(lsoaArea)+0.5, 0.1), col =4, freq = FALSE, xlim = c(min(lsoaArea),quantile(lsoaArea,probs = 0.99)))
 
 
 #2
@@ -174,8 +173,6 @@ londonWardX <- st_read("./statistical-gis-boundaries-london/statistical-gis-boun
 londonWardY <- st_read("./London-wards-2014/London-wards-2014 (1)/London-wards-2014_ESRI/London_Ward_CityMerged.shp")
 
 compare_data <- function(x, y, id.x, id.y = id.x, var.x = character(0), var.y = var.x, FUN = sum, ...) {
-  # Argumentüberprüfung muss noch bearbeitet werden!!!
-  
   # Zwei Listen müssen übergeben werden, ansonsten nicht genügend Daten
   if(!is.list(x) | !is.list(y))
     stop("Bitte überprüfen Sie Ihre Eingabe für x und y!")
@@ -187,7 +184,7 @@ compare_data <- function(x, y, id.x, id.y = id.x, var.x = character(0), var.y = 
     stop("es muss eine korrekte Variable angegeben werden!")
   
   
-  #spezielle Behandlung bei merge von 2 sf Objekten (vllt st_join) muss man sich noch anschauen
+  #spezielle Behandlung bei merge von 2 sf Objekten
   if(class(x)[1] == "sf" & class(y)[1] == "sf"){
     # verknüpft werden die Objekte, indem sie zuerst in einen Dataframe umgewandelt werden und mit der jeweiligen ID verbunden werden. Dabei wird
     # sozusagen die Geometry-Variable deaktiviert
@@ -199,12 +196,14 @@ compare_data <- function(x, y, id.x, id.y = id.x, var.x = character(0), var.y = 
     mergedY <- merge(x %>% as.data.frame(), y %>% as.data.frame(), by.x = id.x, by.y = id.y, all.y = TRUE)
     mergedY %>% st_sf(sf_column_name = 'geometry.y')
     
+    # Funktion wird auf die einzelnen Gruppierungen angewendet
     sumXandY <- sumXandY1 <- (FUN(get(paste(var.x, ".x",sep = ""), mergedXandY), ...))
     sumXandY2 <- (FUN(get(paste(var.y, ".x",sep = ""), mergedXandY), ...))
     sumX <- (FUN(get(paste(var.x,".x",sep = ""), mergedX), ...))
     sumY <- (FUN(get(paste(var.y,".y",sep = ""), mergedY), ...))
   }
   else{
+    # Verknüpfung der Objekte nach den jeweiligen IDs
     mergedXandY <- merge(x, y, by.x = id.x, by.y = id.y)
     mergedX <- merge(x, y, by.x = id.x, by.y = id.y, all.x = TRUE)
     mergedY <- merge(x, y, by.x = id.x, by.y = id.y, all.y = TRUE)
@@ -215,8 +214,9 @@ compare_data <- function(x, y, id.x, id.y = id.x, var.x = character(0), var.y = 
     sumY <- (FUN(get(var.y, mergedY),...))
   }
   
-  # Wenn die Variablen, auf die die Funktion angewendet werden soll nicht gleich sind, wird als Ergebnis bei der Erhebungseinheit X und Y NA gewählt  
-  if((var.x != var.y) | !(all(c(var.x,var.y) %in% colnames(x)) & all(c(var.x, var.y) %in% colnames(y))))
+  # wenn die Ergebnisse der angewendeten Funktion aus dem ersten für die erste und zweite Variable nicht übereinstimmen, wird für das Ergebnis der gemeinsamen Daten
+  # von X und Y NA als Ergebnis verwendet
+  if(sumXandY1 != sumXandY2)
     sumXandY <- NA
   
   df <- data.frame(mergeType = c("X und Y", "nur X", "nur Y"), 
@@ -227,19 +227,19 @@ compare_data <- function(x, y, id.x, id.y = id.x, var.x = character(0), var.y = 
   return(df)
 }
 
-compare_data(londonWardX, londonWardY, "GSS_CODE", "GSS_CODE", "HECTARES", "HECTARES", na.rm = TRUE)
+compare_data(londonWardX, londonWardY, "GSS_CODE", "GSS_CODE", "HECTARES", na.rm = TRUE)
 compare_data(diabetes, londonWardY, "area_id", "GSS_CODE", "HECTARES", na.rm= TRUE)
 compare_data(diabetes, yearOsward, "area_id", "area_id", "area_sq_km", na.rm = TRUE)
 compare_data(diabetes, yearOsward, "area_id", "area_id", "gp_patients", "population", na.rm = TRUE)
 sum(diabetes$gp_patients)
+sum(yearOsward$population)
 
 
 #6
 merged <- merge(yearOsward, diabetes, by= "area_id")
 
 # zusammenhang spearman
-corr <- cor.test(merged$estimated_diabetes_prevalence, merged$energy_tot, method = "spearman")
-corr  # 0.58
+cor.test(merged$estimated_diabetes_prevalence, merged$energy_tot, method = "spearman")
 
 par(mfrow=c(1,1))
 plot(merged$estimated_diabetes_prevalence, merged$energy_tot, main = "Streudiagramm", xlab = "geschätzte Diabetes-Prävalenz", ylab = "Energie der Nährstoffe")
