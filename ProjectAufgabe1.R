@@ -81,13 +81,14 @@ class(mergeboundaries)
 dim(mergeboundaries)    # zwei Reihen weniger, da diese in "yearLsoa" nicht vorhanden sind (weiß nicht, wie es gehört)
 colnames(mergeboundaries)
 
+
 #install.packages("colorspace")
 library("colorspace")
 s
 mergeboundaries$perresident <- mergeboundaries$num_transactions/mergeboundaries$population
 par(mfrow=c(1,2))
 plot(mergeboundaries["num_transactions"], logz = TRUE, main = "Number of Transactions", pal= function(...) colorspace::sequential_hcl(...,palette = "Blue-Yellow", rev = TRUE))
-plot(mergeboundaries["perresident"], logz = TRUE, main = "Transactions per resident", pal= function(...) colorspace::sequential_hcl(...,palette = "YlGnBu",rev = TRUE))
+plot(mergeboundaries["perresident"], logz = TRUE, main = "Transactions per resident", pal= function(...) colorspace::sequential_hcl(...,palette = "Blue-Yellow",rev = TRUE))
 
 
 #3

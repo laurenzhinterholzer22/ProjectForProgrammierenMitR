@@ -1,7 +1,7 @@
 ---
 title: "Projektarbeit"
 author: "Laurenz Hinterholzer & Manuel Karlsberger"
-date: "7/22/2020"
+date: "07/31/2020"
 output:
   pdf_document: default
   word_document: default
@@ -57,7 +57,8 @@ boroughPopulation <- yearBorough$population
  
 ```{r}
 areas <- list(lsoa = lsoaArea, msoa =  msoaArea,  ward = oswardArea, borough = boroughArea)
-population <- list(lsoa = lsoaPopulation, msoa = msoaPopulation, ward = oswardPopulation, borough = boroughPopulation)
+population <- list(lsoa = lsoaPopulation, msoa = msoaPopulation,
+                   ward = oswardPopulation, borough = boroughPopulation)
 
 lapply(areas, sum)     
 lapply(population, sum)    
@@ -110,8 +111,10 @@ Der Dataframe der Tabelle 1 in Aiello et al. (2020) ist annähernd der selbe wie
 
 ```{r}
 par(mfrow=c(1,2))
-hist(lsoaPopulation, main = "Lsoa Bevoelkerung", xlab = "Bevoelkerung", ylab = "Dichte",breaks= seq(min(lsoaPopulation),max(lsoaPopulation)+100, 100), col =3, freq = FALSE, xlim = c(min(lsoaPopulation),quantile(lsoaPopulation,probs = 0.99)))
-hist(lsoaArea, main = "Lsoa Flaeche",xlab = "Flaeche", ylab = "Dichte", breaks= seq(min(lsoaArea),max(lsoaArea)+0.5, 0.1), col =4, freq = FALSE, xlim = c(min(lsoaArea),quantile(lsoaArea,probs = 0.99)))
+hist(lsoaPopulation, main = "Lsoa Bevoelkerung", xlab = "Bevoelkerung",
+     ylab = "Dichte",breaks= seq(min(lsoaPopulation),max(lsoaPopulation)+100, 100), col =3, freq = FALSE, xlim = c(min(lsoaPopulation),quantile(lsoaPopulation,probs = 0.99)))
+hist(lsoaArea, main = "Lsoa Flaeche",xlab = "Flaeche", ylab = "Dichte",
+     breaks= seq(min(lsoaArea),max(lsoaArea)+0.5, 0.1), col =4, freq = FALSE, xlim = c(min(lsoaArea),quantile(lsoaArea,probs = 0.99)))
 ```
     
 Schlussendlich wurden die Daten des kleinsten Aggregationsgrades, also Lsoa, visualisiert. Um die Bevölkerung und Fläche zu visualisieren, haben wir ein Histogramm verwendet und uns dazu entschlossen die Daten bis zum 0,99-Quantil darzustellen, da die Veranschaulichung der Verteilung viel besser ist, wenn die Ausreißer nach oben gefiltert werden. Die Bevölkerung hat die meisten Ausprägungen bei ca 1800 und die Fläche zwischen 0.1 und 0.4 km2, was auch aus dem vorherigen Dataframe entnommen werden kann.
@@ -168,11 +171,15 @@ par(mfrow=c(1,2))
 
 mergeboundaries$perresident <- mergeboundaries$num_transactions/mergeboundaries$population
 
-plot(mergeboundaries["num_transactions"], logz = TRUE, main = "Number of Transactions", pal= function(...) colorspace::sequential_hcl(...,palette = "Blue-Yellow", rev = TRUE))
-plot(mergeboundaries["perresident"], logz = TRUE, main = "Transactions per resident", pal= function(...) colorspace::sequential_hcl(...,palette = "Blue-Yellow",rev = TRUE))
+plot(mergeboundaries["num_transactions"], logz = TRUE, main = "Number of Transactions",
+     pal= function(...) colorspace::sequential_hcl(...,palette = "Blue-Yellow", rev = TRUE))
+plot(mergeboundaries["perresident"], logz = TRUE, main = "Transactions per resident",
+     pal= function(...) colorspace::sequential_hcl(...,palette = "Blue-Yellow",rev = TRUE))
 ```
     
-Bei der Reproduktion der Grafik Abbildung 3 in Aiello et al. (2020) erkennt man bis auf die Farbpalette keine Unterschiede. Weiters ist die Grafik welche die Anzahl der Transaktionen visualisiert, bis auf die Skalierung annähernd ident.
+Bei den beiden Grafiken lässt sich erkennen, dass die meisten Transaktionen (also Einkäufe) eher im Zentrum Londons getätigt wurden. Da die meisten Geschäfte ihren Standort wohl eher im Zentrum haben, ist das auch nachvollziehbar. 
+Betrachtet man die Transaktionen pro Einwohner (Grafik 2), ist fast kein Unterschied zur ersten Grafik zu erkennen. Das liegt daran, dass die Anzahl der Einwohner auf LSOA-Level sehr gleichmäßig über alle LSOAs verteilt ist und sich dadurch die Anzahl der Transaktionen pro Einwohner in sehr ähnlichem verhältnis verändert.
+
 
 ***
 # **Aufgabe 3**
@@ -200,13 +207,14 @@ repr <- function(var){
 normRepr <- lapply(dat, repr)
 
 par(mfrow=c(1,1))
-plot(as.data.frame(normRepr$lsoa), main = "Representativitaet", xlab = "Threshold", ylab = "% of areas with representativeness > threshold")
+plot(as.data.frame(normRepr$lsoa), main = "Representativitaet", xlab = "Threshold",
+     ylab = "% of areas with representativeness > threshold")
 lines(as.data.frame(normRepr$msoa), lty = 1)
 lines(as.data.frame(normRepr$ward), lty = 2)
 legend("topright", c("lsoa", "msoa", "ward"), lty = c(NA,1,2), pch = c(1,NA,NA))
 ```
   
-Bei dieser Grafik wird mithilfe der Daten von Lsoa, Msoa und Ward die Abbildung 4 links in Aiello et al. (2020) visualisiert. Wobei man bei dieser Grafik schon einen deutlichen Unterschied zu der Grafik in Aiello sieht. Bei Aiello sind die drei Aggregationsgrade annähernd ident und nähern sich bereits bei 0.4 Threshold der X-Achse. Bei unserer Grafik verhält sich nur Lsoa wie bei Aello und Msoa und Ward flachen erst ab 0.5 ab und schneiden erst bei 0.8 die X-Achse.
+Bei dieser Grafik wird mithilfe der Daten von Lsoa, Msoa und Ward die Abbildung 4 links in Aiello et al. (2020) visualisiert. Wobei man bei dieser Grafik schon einen deutlichen Unterschied zu der Grafik in Aiello sieht. Bei Aiello sind die drei Aggregationsgrade annähernd ident und nähern sich bereits bei 0.4 Threshold der X-Achse. Bei unserer Grafik verhält sich nur Lsoa wie bei Aiello und Msoa und Ward flachen erst ab 0.5 ab und schneiden erst bei 0.8 die X-Achse.
 
 ***
 # **Aufgabe 4**
@@ -234,30 +242,36 @@ par(mfrow=c(2,3))
 
 h <- hist(energyCarbTot, breaks=seq(0,0.6,length=75), plot = F)
 h$density <- h$counts/sum(h$counts)
-plot(h, main = NULL, xlab = "Energie von Kohlenhydraten",xlim = c(0,0.6), ylim = c(0,0.6), col = "red", freq = F)
+plot(h, main = NULL, xlab = "Energie von Kohlenhydraten",xlim = c(0,0.6),
+     ylim = c(0,0.6), col = "red", freq = F)
 
 h <- hist(energyFatTot, breaks=seq(0,0.6,length=75), plot = F)
 h$density <- h$counts/sum(h$counts)
-plot(h, main = NULL, xlab = "Energie von Fetten",xlim = c(0,0.6), ylim = c(0,0.6), col = "purple", freq = F)
+plot(h, main = NULL, xlab = "Energie von Fetten",xlim = c(0,0.6),
+     ylim = c(0,0.6), col = "purple", freq = F)
 
 h <- hist(energySatTot, breaks=seq(0,0.6,length=75), plot = F)
 h$density <- h$counts/sum(h$counts)
-plot(h, main = NULL, xlab = "Energie von gesättigten Fetten",xlim = c(0,0.6), ylim = c(0,0.6), col = "pink", freq = F)
+plot(h, main = NULL, xlab = "Energie von gesättigten Fetten",xlim = c(0,0.6),
+     ylim = c(0,0.6), col = "pink", freq = F)
 
 h <- hist(energySugarTot, breaks=seq(0,0.6,length=75), plot = F)
 h$density <- h$counts/sum(h$counts)
-plot(h, main = NULL, xlab = "Energie von Zucker",xlim = c(0,0.6), ylim = c(0,0.6), col = "orange", freq = F)
+plot(h, main = NULL, xlab = "Energie von Zucker",xlim = c(0,0.6),
+     ylim = c(0,0.6), col = "orange", freq = F)
 
 h <- hist(energyProteinTot, breaks=seq(0,0.6,length=75), plot = F)
 h$density <- h$counts/sum(h$counts)
-plot(h, main = NULL, xlab = "Energie von Eiweiß",xlim = c(0,0.6), ylim = c(0,0.6), col = "green", freq = F)
+plot(h, main = NULL, xlab = "Energie von Eiweiß",xlim = c(0,0.6), 
+     ylim = c(0,0.6), col = "green", freq = F)
 
 h <- hist(energyFibreTot, breaks=seq(0,0.6,length=75), plot = F)
 h$density <- h$counts/sum(h$counts)
-plot(h, main = NULL, xlab = "Energie von Ballaststoffe",xlim = c(0,0.6), ylim = c(0,0.6), col = "lightgreen", freq = F)
+plot(h, main = NULL, xlab = "Energie von Ballaststoffe",xlim = c(0,0.6), 
+     ylim = c(0,0.6), col = "lightgreen", freq = F)
 ```
 
-Bei diesen 6 Histogrammen haben wir die Energie der 6 Nährstoffe dargestellt. Auf der Y-Achse ist die Dichte und auf der X-Achse die Energie Abgebildet. Die Londoner kaufen am meisten Produkte mit Fett und Kohlenhydraten. Am wenigsten werden Ballaststoffe eingekauft. 
+Bei diesen 6 Histogrammen haben wir die Energie der 6 Nährstoffe dargestellt. Auf der Y-Achse ist die Dichte und auf der X-Achse die Energie abgebildet. Die Londoner kaufen am meisten Produkte mit Fett und Kohlenhydraten. Am wenigsten werden Ballaststoffe eingekauft. 
 
 
 ***
@@ -308,28 +322,36 @@ londonWardY <- st_read("./London-wards-2014/London-wards-2014 (1)/London-wards-2
 ## Funktion
 
 ```{r results="hide"}
-compare_data <- function(x, y, id.x, id.y = id.x, var.x = character(0), var.y = var.x, FUN = sum, ...) {
+compare_data <- function(x, y, id.x, id.y = id.x, var.x = character(0),
+                         var.y = var.x, FUN = sum, ...) {
   # Zwei Listen müssen übergeben werden, ansonsten nicht genügend Daten
   if(!is.list(x) | !is.list(y))
     stop("Bitte überprüfen Sie Ihre Eingabe für x und y!")
-  # ID muss als String übergeben werden (zumindest x, y nicht unbedingt. Wenn y übergeben wird, muss es auch ein String sein)
+  # ID muss als String übergeben werden (zumindest x, y nicht unbedingt.
+  # Wenn y übergeben wird, muss es auch ein String sein)
   if(!is.character(id.x) | ((id.x != id.y) & !is.character(id.y)))
     stop("es muss eine korrekte ID angegeben werden!")
-  # Variable muss als String übergeben werden (zumindest x, y nicht unbedingt. Wenn y übergeben wird, muss es auch ein String sein)
+  # Variable muss als String übergeben werden (zumindest x, y nicht unbedingt.
+  # Wenn y übergeben wird, muss es auch ein String sein)
   if(!is.character(var.x) | ((var.x != var.y) & !is.character(var.y)))
     stop("es muss eine korrekte Variable angegeben werden!")
   
   
   #spezielle Behandlung bei merge von 2 sf Objekten
   if(class(x)[1] == "sf" & class(y)[1] == "sf"){
-    # verknüpft werden die Objekte, indem sie zuerst in einen Dataframe umgewandelt werden und mit der jeweiligen ID verbunden werden. Dabei wird
+    # verknüpft werden die Objekte, indem sie zuerst in einen Dataframe umgewandelt werden
+    # und mit der jeweiligen ID verbunden werden. Dabei wird
     # sozusagen die Geometry-Variable deaktiviert
-    mergedXandY <- merge(x %>% as.data.frame(), y %>% as.data.frame(), by.x = id.x, by.y = id.y)
-    # Danach wird die Geometry-Variable wieder "aktiviert" und wieder in ein Objekt der Klasse sf umgewandelt
+    mergedXandY <- merge(x %>% as.data.frame(), y %>% as.data.frame(),
+                         by.x = id.x, by.y = id.y)
+    # Danach wird die Geometry-Variable wieder "aktiviert" und wieder in ein Objekt
+    # der Klasse sf umgewandelt
     mergedXandY %>% st_sf(sf_column_name = 'geometry.x')
-    mergedX <- merge(x %>% as.data.frame(), y %>% as.data.frame(), by.x = id.x, by.y = id.y, all.x = TRUE)
+    mergedX <- merge(x %>% as.data.frame(), y %>% as.data.frame(),
+                     by.x = id.x, by.y = id.y, all.x = TRUE)
     mergedX %>% st_sf(sf_column_name = 'geometry.x')
-    mergedY <- merge(x %>% as.data.frame(), y %>% as.data.frame(), by.x = id.x, by.y = id.y, all.y = TRUE)
+    mergedY <- merge(x %>% as.data.frame(), y %>% as.data.frame(),
+                     by.x = id.x, by.y = id.y, all.y = TRUE)
     mergedY %>% st_sf(sf_column_name = 'geometry.y')
     
     # Funktion wird auf die einzelnen Gruppierungen angewendet
@@ -350,14 +372,17 @@ compare_data <- function(x, y, id.x, id.y = id.x, var.x = character(0), var.y = 
     sumY <- (FUN(get(var.y, mergedY),...))
   }
   
-  # wenn die Ergebnisse der angewendeten Funktion aus dem ersten für die erste und zweite Variable nicht übereinstimmen, wird für das Ergebnis der gemeinsamen Daten
+  # wenn die Ergebnisse der angewendeten Funktion aus dem ersten für die erste und zweite 
+  # Variable nicht übereinstimmen, wird für das Ergebnis der gemeinsamen Daten
   # von X und Y NA als Ergebnis verwendet
   if(sumXandY1 != sumXandY2)
     sumXandY <- NA
   
   df <- data.frame(mergeType = c("X und Y", "nur X", "nur Y"), 
-                   anzahl = c(nrow(mergedXandY),nrow(mergedX)-nrow(mergedXandY), nrow(mergedY)-nrow(mergedXandY)),
-                   ergebnis = c(round(sumXandY,0), if(var.x %in% colnames(x)) round(sumX-sumXandY1,0) else NA,
+                   anzahl = c(nrow(mergedXandY),nrow(mergedX)-nrow(mergedXandY),
+                              nrow(mergedY)-nrow(mergedXandY)),
+                   ergebnis = c(round(sumXandY,0), if(var.x %in% colnames(x)) round(sumX-sumXandY1,0)
+                                else NA,
                                 if(var.y %in% colnames(y)) round(sumY-sumXandY2,0) else NA))
  
   return(df)
@@ -422,8 +447,9 @@ cor.test(merged$estimated_diabetes_prevalence, merged$energy_tot, method = "spea
 
 ```{r}
 par(mfrow=c(1,1))
-plot(merged$estimated_diabetes_prevalence, merged$energy_tot, main = "Streudiagramm", xlab = "geschätzte Diabetes-Prävalenz", ylab = "Energie der Nährstoffe")
+plot(merged$estimated_diabetes_prevalence, merged$energy_tot, main = "Streudiagramm",
+     xlab = "geschätzte Diabetes-Prävalenz", ylab = "Energie der Nährstoffe")
 ```
 
 Bei dieser Aufgabe wurden die Daten aus year_osward_grocery.csv mit der Information in
-diabetes_estimates_osward_2016.csv. verknüpft und die Korrelation zwischen der geschätzten Diabetes Praevalenz und der Energie der Nährstoffe berechnet und mit einem Streudiagramm visualisiert. Die Korrelation mithilfe von Spearman ist 0.58, also gibt es einen mittleren gleichsinnigen Zusammenhang der beiden Variablen. Dieses Ergebnis bestätigt das Streudiagramm, in dem sich dieser Zusammenhang auch erkennen lässt. 
+diabetes_estimates_osward_2016.csv. verknüpft und die Korrelation zwischen der geschätzten Diabetes Praevalenz und der Energie der Nährstoffe berechnet und mit einem Streudiagramm visualisiert. Die Korrelation mithilfe von Spearman ist 0.58, also gibt es einen mittleren gleichsinnigen Zusammenhang der beiden Variablen. Das heißt, in Regionen mit einer höheren Diabetes-Prävalenz enthält das durchschnittliche Produkt mehr Energie - das Kaufverhalten hat also einen Einfluss. Dieses Ergebnis bestätigt das Streudiagramm, in dem sich dieser Zusammenhang auch erkennen lässt. 
